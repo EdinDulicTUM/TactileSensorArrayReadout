@@ -289,7 +289,7 @@
 // <i> I2C Bus clock (SCL) speed measured in Hz
 // <id> i2c_master_baud_rate
 #ifndef CONF_SERCOM_3_I2CM_BAUD
-#define CONF_SERCOM_3_I2CM_BAUD 400000
+#define CONF_SERCOM_3_I2CM_BAUD 360000
 #endif
 
 // </h>

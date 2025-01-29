@@ -30,14 +30,14 @@
 // <o> Length of one timer tick in uS <0-4294967295>
 // <id> timer_tick
 #ifndef CONF_TC3_TIMER_TICK
-#define CONF_TC3_TIMER_TICK 1000
+#define CONF_TC3_TIMER_TICK 100
 #endif
 // </h>
 
 // <e> Advanced configuration
 // <id> timer_advanced_configuration
 #ifndef CONF_TC3__ADVANCED_CONFIGURATION_ENABLE
-#define CONF_TC3__ADVANCED_CONFIGURATION_ENABLE 0
+#define CONF_TC3__ADVANCED_CONFIGURATION_ENABLE 1
 #endif
 
 // <y> Prescaler and Counter Synchronization Selection

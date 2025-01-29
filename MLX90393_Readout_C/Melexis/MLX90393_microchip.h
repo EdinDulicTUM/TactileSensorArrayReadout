@@ -102,6 +102,7 @@
   bool hasError(uint8_t status);
   void convertRaw(struct MLX90393 *hall_sensor);
   uint16_t convDelayMillis(struct MLX90393 *hall_sensor);
+  uint16_t convDelayMicro(struct MLX90393 *hall_sensor);
 
  // higher-level API
   uint8_t select_prefix(struct MLX90393 *hall_sensor, int order_code_last_digit);

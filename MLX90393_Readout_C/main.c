@@ -131,7 +131,7 @@ int main(void)
 	 
 	 new_data = false;
 	 triggered = false;
-	wait_time = convDelayMillis(&sensor9);
+	wait_time = convDelayMicro(&sensor9);
 	TIMER_init(wait_time);
 
 
@@ -175,6 +175,7 @@ int main(void)
 		*/
 	
 	if(new_data == true){	
+		/*
 		char str1[120] = {};
 		sprintf(str1, "Sensor 1: X=%.2f; Y=%.2f;  Z=%.2f; Temp = %.2f\n", sensor1.data.x, sensor1.data.y, sensor1.data.z, sensor1.data.t);
 		io_write(debug_io, (uint8_t *)str1, strlen(str1));
@@ -215,6 +216,7 @@ int main(void)
 		sprintf(str10, "-------------------------------------------------------------\n");
 		io_write(debug_io, (uint8_t *)str10, strlen(str10));
 		//delay_ms(1000);
+		*/
 		new_data = false; 
 		triggered = false;
 		}

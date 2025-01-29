@@ -63,7 +63,7 @@ uint8_t begin(struct MLX90393 *hall_sensor, int order_code_last_digit, uint8_t A
   uint8_t status1 = checkStatus(reset(hall_sensor, io));
   uint8_t status2 = setGainSel(hall_sensor, 3, io); //7
   uint8_t status3 = setResolution(hall_sensor, 1, 1, 1, io); //0,0,0
-  uint8_t status4 = setOverSampling(hall_sensor, 2, io); //3
+  uint8_t status4 = setOverSampling(hall_sensor, 1, io); //3
   uint8_t status5 = setDigitalFiltering(hall_sensor, 2, io); //7
   uint8_t status6 = setTemperatureCompensation(hall_sensor, 0, io);//0
 
@@ -650,6 +650,25 @@ uint16_t convDelayMillis(struct MLX90393 *hall_sensor) {
 					   
 					   */
 	return delaytimeMilli;
+}
+
+uint16_t convDelayMicro(struct MLX90393 *hall_sensor) {
+  const uint8_t osr = (hall_sensor->cache.reg[OSR_REG] & OSR_MASK) >> OSR_SHIFT;
+  const uint8_t osr2 = (hall_sensor->cache.reg[OSR2_REG] & OSR2_MASK) >> OSR2_SHIFT;
+  const uint8_t dig_flt = (hall_sensor->cache.reg[DIG_FLT_REG] & DIG_FLT_MASK) >> DIG_FLT_SHIFT;
+  const uint8_t magnetic_axis = 3;
+  
+  uint32_t delayTimeMicro = (magnetic_axis * (((2 + (1 << dig_flt)) * (1 << osr) *64) + 67)) + ((192*(1<<osr2)) + 67) ; 
+  uint16_t delayTimeMicro_final = delayTimeMicro/100 + 8; 
+
+	/*(hall_sensor->DRDY_pin == true)? 0  //no delay if drdy pin present  :
+                     // estimate conversion time from datasheet equations
+                     ( 3 * (2 + (1 << dig_flt)) * (1 << osr) *0.064f +
+                      (1 << osr2) * 0.192f ) *
+                       1.3f;  // 30% tolerance
+					   
+					   */
+	return delayTimeMicro_final;
 }
 
 uint8_t readData(struct MLX90393 *hall_sensor, struct io_descriptor *io)
