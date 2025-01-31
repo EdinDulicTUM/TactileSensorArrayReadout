@@ -12,8 +12,8 @@ void triggerInitialize(struct MLX90393 *hall_sensor, struct io_descriptor *io)
 {
 		//setTrigIntSel(hall_sensor,1,io);
 		setExtTrig(hall_sensor,1,io);
-		//startMeasurement(hall_sensor, X_FLAG | Y_FLAG | Z_FLAG | T_FLAG, io);
-		startMeasurement(hall_sensor, X_FLAG | Y_FLAG | Z_FLAG, io);
+		startMeasurement(hall_sensor, X_FLAG | Y_FLAG | Z_FLAG | T_FLAG, io);
+		//startMeasurement(hall_sensor, X_FLAG | Y_FLAG | Z_FLAG, io);
 }
 
 
@@ -38,8 +38,8 @@ void triggerReadout_Prepare_Timer(uint16_t pulseTime)
 
 uint8_t triggerReadout(struct MLX90393 *hall_sensor, struct io_descriptor *io)
 {
-	//uint8_t status = readMeasurement(hall_sensor, X_FLAG | Y_FLAG | Z_FLAG | T_FLAG, io);
-	uint8_t status = readMeasurement(hall_sensor, X_FLAG | Y_FLAG | Z_FLAG , io);
+	uint8_t status = readMeasurement(hall_sensor, X_FLAG | Y_FLAG | Z_FLAG | T_FLAG, io);
+	//uint8_t status = readMeasurement(hall_sensor, X_FLAG | Y_FLAG | Z_FLAG , io);
 	convertRaw(hall_sensor);
 	return checkStatus(status);
 };
