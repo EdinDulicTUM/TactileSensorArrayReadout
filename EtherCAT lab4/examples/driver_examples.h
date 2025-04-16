@@ -16,8 +16,6 @@ void I2C_0_example(void);
 
 void SPI_0_example(void);
 
-void TIMER_1_example(void);
-
 #ifdef __cplusplus
 }
 #endif

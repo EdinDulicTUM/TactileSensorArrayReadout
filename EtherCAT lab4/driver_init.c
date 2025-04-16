@@ -11,8 +11,6 @@
 #include <utils.h>
 #include <hal_init.h>
 
-struct timer_descriptor TIMER_1;
-
 struct i2c_m_sync_desc I2C_0;
 
 struct spi_m_dma_descriptor SPI_0;
@@ -112,17 +110,10 @@ void SPI_0_init(void)
 	SPI_0_PORT_init();
 }
 
-/**
- * \brief Timer initialization function
- *
- * Enables Timer peripheral, clocks and initializes Timer driver
- */
-static void TIMER_1_init(void)
+void TIMER_1_CLOCK_init(void)
 {
 	hri_mclk_set_APBBMASK_TC3_bit(MCLK);
 	hri_gclk_write_PCHCTRL_reg(GCLK, TC3_GCLK_ID, CONF_GCLK_TC3_SRC | (1 << GCLK_PCHCTRL_CHEN_Pos));
-
-	timer_init(&TIMER_1, TC3, _tc_get_timer());
 }
 
 void TIMER_0_CLOCK_init(void)
@@ -167,7 +158,10 @@ void system_init(void)
 
 	SPI_0_init();
 
+	TIMER_1_CLOCK_init();
+
 	TIMER_1_init();
+
 	TIMER_0_CLOCK_init();
 
 	TIMER_0_init();

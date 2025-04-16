@@ -39,7 +39,7 @@
  *
  * \acme_license_stop
  *
- * Project: EtherCAT lab4
+ * Project: SensorArrayReadoutEtherCAT
  * Target:  ATSAME54P20A 
  *
  **/

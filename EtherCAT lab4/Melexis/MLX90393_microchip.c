@@ -61,8 +61,8 @@ uint8_t begin(struct MLX90393 *hall_sensor, int order_code_last_digit, uint8_t A
   //tbd
   exit_command(hall_sensor, io);
   uint8_t status1 = checkStatus(reset(hall_sensor, io));
-  uint8_t status2 = setGainSel(hall_sensor, 3, io); //7
-  uint8_t status3 = setResolution(hall_sensor, 1, 1, 1, io); //0,0,0
+  uint8_t status2 = setGainSel(hall_sensor, 2, io); //7
+  uint8_t status3 = setResolution(hall_sensor, 0, 0, 0, io); //0,0,0
   uint8_t status4 = setOverSampling(hall_sensor, 1, io); //3
   uint8_t status5 = setDigitalFiltering(hall_sensor, 2, io); //7
   uint8_t status6 = setTemperatureCompensation(hall_sensor, 0, io);//0
@@ -542,6 +542,8 @@ void convertRaw(struct MLX90393 *hall_sensor)
   } else {
     switch(res_x){
     case 0:
+		hall_sensor->data.x = (int16_t) hall_sensor->dataRaw.x * xy_sens * gain_factor * (1 << res_x);
+		break;
     case 1:
       hall_sensor->data.x = (int16_t) hall_sensor->dataRaw.x * xy_sens * gain_factor * (1 << res_x);
       break;
@@ -562,6 +564,8 @@ void convertRaw(struct MLX90393 *hall_sensor)
   } else {
     switch(res_y){
     case 0:
+		hall_sensor->data.y = (int16_t) hall_sensor->dataRaw.y * xy_sens * gain_factor * (1 << res_y);
+		break;
     case 1:
       hall_sensor->data.y = (int16_t) hall_sensor->dataRaw.y * xy_sens * gain_factor * (1 << res_y);
       break;
@@ -582,6 +586,8 @@ void convertRaw(struct MLX90393 *hall_sensor)
   } else {
     switch(res_z){
     case 0:
+		hall_sensor->data.z = (int16_t) hall_sensor->dataRaw.z * z_sens * gain_factor * (1 << res_z);
+		break;
     case 1:
       hall_sensor->data.z = (int16_t) hall_sensor->dataRaw.z * z_sens * gain_factor * (1 << res_z);
       break;
@@ -622,13 +628,13 @@ void convertRaw(struct MLX90393 *hall_sensor)
     }
     if (hall_sensor->data.z > 50000)
     {
-	    hall_sensor->data.z = 50000;
+	    //hall_sensor->data.z = 50000;
     }
     else
     {
 	    if (hall_sensor->data.z < -50000)
 	    {
-		    hall_sensor->data.z = -50000;
+		    //hall_sensor->data.z = -50000;
 	    }
     }
 }

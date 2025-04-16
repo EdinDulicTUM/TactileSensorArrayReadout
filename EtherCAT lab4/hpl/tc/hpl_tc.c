@@ -292,11 +292,12 @@ static void tc_interrupt_handler(struct _timer_device *device)
 /**
  * \brief TC interrupt handler
  */
+/*
 void TC3_Handler(void)
 {
 	tc_interrupt_handler(_tc3_dev);
 }
-
+*/
 /**
  * \internal Retrieve TC index
  *

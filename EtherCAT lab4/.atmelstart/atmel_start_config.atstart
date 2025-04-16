@@ -954,7 +954,7 @@ drivers:
       i2c_master_arch_sdahold: 300-600ns hold time
       i2c_master_arch_sexttoen: false
       i2c_master_arch_trise: 215
-      i2c_master_baud_rate: 320000
+      i2c_master_baud_rate: 100000
     optional_signals: []
     variant:
       specification: SDA=0, SCL=1
@@ -1028,24 +1028,53 @@ drivers:
           slow_gclk_selection: Generic clock generator 3
   TIMER_1:
     user_label: TIMER_1
-    definition: Atmel:SAME54_Drivers:0.0.1::SAME54P20A-AU::TC3::driver_config_definition::Timer::HAL:Driver:Timer
+    definition: Atmel:SAME54_Drivers:0.0.1::SAME54P20A-AU::TC3::driver_config_definition::16-bit.Counter.Mode::Lite:TC:Timer
     functionality: Timer
-    api: HAL:Driver:Timer
+    api: Lite:TC:Timer
     configuration:
-      tc_arch_dbgrun: false
-      tc_arch_evact: Event action disabled
-      tc_arch_mceo0: false
-      tc_arch_mceo1: false
-      tc_arch_ondemand: false
-      tc_arch_ovfeo: false
-      tc_arch_presync: Reload or reset counter on next GCLK
-      tc_arch_runstdby: false
-      tc_arch_tcei: false
-      tc_arch_tcinv: false
-      timer_advanced_configuration: true
-      timer_event_control: false
-      timer_prescaler: Divide by 8
-      timer_tick: 100
+      cc_cc0: 15624
+      cc_cc1: 6249
+      cc_control: true
+      count_control: false
+      count_count: 0
+      ctrla_alock: false
+      ctrla_capten0: false
+      ctrla_capten1: false
+      ctrla_captmode0: DEFAULT
+      ctrla_captmode1: DEFAULT
+      ctrla_control: true
+      ctrla_copen0: false
+      ctrla_copen1: false
+      ctrla_enable: true
+      ctrla_mode: 0
+      ctrla_ondemand: false
+      ctrla_prescaler: DIV64
+      ctrla_prescsync: GCLK
+      ctrla_runstdby: false
+      ctrlbset_cmd: NONE
+      ctrlbset_control: false
+      ctrlbset_dir: false
+      ctrlbset_lupd: false
+      ctrlbset_oneshot: false
+      ctrlc_inven0: false
+      ctrlc_inven1: false
+      dbgctrl_control: false
+      dbgctrl_dbgrun: false
+      drvctrl_control: false
+      evctrl_control: true
+      evctrl_evact: 'OFF'
+      evctrl_mceo0: false
+      evctrl_mceo1: false
+      evctrl_ovfeo: true
+      evctrl_tcei: false
+      evctrl_tcinv: false
+      intenset_control: true
+      intenset_err: false
+      intenset_mc0: false
+      intenset_mc1: true
+      intenset_ovf: true
+      wave_control: true
+      wave_wavegen: MFRQ
     optional_signals: []
     variant: null
     clocks:

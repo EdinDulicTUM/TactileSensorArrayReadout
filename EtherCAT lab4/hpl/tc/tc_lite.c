@@ -37,6 +37,74 @@
 /**
  * \brief Initialize TC interface
  */
+int8_t TIMER_1_init()
+{
+
+	if (!hri_tc_is_syncing(TC3, TC_SYNCBUSY_SWRST)) {
+		if (hri_tc_get_CTRLA_reg(TC3, TC_CTRLA_ENABLE)) {
+			hri_tc_clear_CTRLA_ENABLE_bit(TC3);
+			hri_tc_wait_for_sync(TC3, TC_SYNCBUSY_ENABLE);
+		}
+		hri_tc_write_CTRLA_reg(TC3, TC_CTRLA_SWRST);
+	}
+	hri_tc_wait_for_sync(TC3, TC_SYNCBUSY_SWRST);
+
+	hri_tc_write_CTRLA_reg(TC3,
+	                       0 << TC_CTRLA_CAPTMODE0_Pos       /* Capture mode Channel 0: 0 */
+	                           | 0 << TC_CTRLA_CAPTMODE1_Pos /* Capture mode Channel 1: 0 */
+	                           | 0 << TC_CTRLA_COPEN0_Pos    /* Capture Pin 0 Enable: disabled */
+	                           | 0 << TC_CTRLA_COPEN1_Pos    /* Capture Pin 1 Enable: disabled */
+	                           | 0 << TC_CTRLA_CAPTEN0_Pos   /* Capture Channel 0 Enable: disabled */
+	                           | 0 << TC_CTRLA_CAPTEN1_Pos   /* Capture Channel 1 Enable: disabled */
+	                           | 0 << TC_CTRLA_ALOCK_Pos     /* Auto Lock: disabled */
+	                           | 0 << TC_CTRLA_PRESCSYNC_Pos /* Prescaler and Counter Synchronization: 0 */
+	                           | 0 << TC_CTRLA_ONDEMAND_Pos  /* Clock On Demand: disabled */
+	                           | 0 << TC_CTRLA_RUNSTDBY_Pos  /* Run in Standby: disabled */
+	                           | 5 << TC_CTRLA_PRESCALER_Pos /* Setting: 5 */
+	                           | 0x0 << TC_CTRLA_MODE_Pos);  /* Operating Mode: 0x0 */
+
+	hri_tc_write_CTRLB_reg(TC3,
+	                       0 << TC_CTRLBSET_CMD_Pos           /* Command: 0 */
+	                           | 0 << TC_CTRLBSET_ONESHOT_Pos /* One-Shot: disabled */
+	                           | 0 << TC_CTRLBCLR_LUPD_Pos    /* Setting: disabled */
+	                           | 0 << TC_CTRLBSET_DIR_Pos);   /* Counter Direction: disabled */
+
+	hri_tc_write_WAVE_reg(TC3, 1); /* Waveform Generation Mode: 1 */
+
+	// hri_tc_write_DRVCTRL_reg(TC3,0 << TC_DRVCTRL_INVEN1_Pos /* Output Waveform 1 Invert Enable: disabled */
+	//		 | 0 << TC_DRVCTRL_INVEN0_Pos); /* Output Waveform 0 Invert Enable: disabled */
+
+	// hri_tc_write_DBGCTRL_reg(TC3,0); /* Run in debug: 0 */
+
+	hri_tccount16_write_CC_reg(TC3, 0, 0x3d08); /* Compare/Capture Value: 0x3d08 */
+
+	hri_tccount16_write_CC_reg(TC3, 1, 0x1869); /* Compare/Capture Value: 0x1869 */
+
+	// hri_tccount16_write_COUNT_reg(TC3,0x0); /* Counter Value: 0x0 */
+
+	hri_tc_write_EVCTRL_reg(
+	    TC3,
+	    0 << TC_EVCTRL_MCEO0_Pos       /* Match or Capture Channel 0 Event Output Enable: disabled */
+	        | 0 << TC_EVCTRL_MCEO1_Pos /* Match or Capture Channel 1 Event Output Enable: disabled */
+	        | 1 << TC_EVCTRL_OVFEO_Pos /* Overflow/Underflow Event Output Enable: enabled */
+	        | 0 << TC_EVCTRL_TCEI_Pos  /* TC Event Input: disabled */
+	        | 0 << TC_EVCTRL_TCINV_Pos /* TC Inverted Event Input: disabled */
+	        | 0);                      /* Event Action: 0 */
+
+	hri_tc_write_INTEN_reg(TC3,
+	                       0 << TC_INTENSET_MC0_Pos         /* Match or Capture Channel 0 Interrupt Enable: disabled */
+	                           | 1 << TC_INTENSET_MC1_Pos   /* Match or Capture Channel 1 Interrupt Enable: enabled */
+	                           | 0 << TC_INTENSET_ERR_Pos   /* Error Interrupt Enable: disabled */
+	                           | 1 << TC_INTENSET_OVF_Pos); /* Overflow Interrupt enable: enabled */
+
+	hri_tc_write_CTRLA_ENABLE_bit(TC3, 1 << TC_CTRLA_ENABLE_Pos); /* Enable: enabled */
+
+	return 0;
+}
+
+/**
+ * \brief Initialize TC interface
+ */
 int8_t TIMER_0_init()
 {
 

@@ -12,7 +12,7 @@
 struct io_descriptor *bmx_io;
 
 //initialize timertask
-static struct timer_task TIMER_task1;
+//static struct timer_task TIMER_task1;
 
 //initialize sensors
 struct MLX90393 sensor1;
@@ -41,6 +41,7 @@ struct sensorRow_Values sensorRow_Values_1;
 //readout variables
 bool new_data;
 bool triggered;
+bool data_readout;
 uint16_t wait_time;
 uint8_t selected_row;
 
@@ -90,12 +91,12 @@ typedef struct  {
 } BLDC_ECAT_IN;
 
 
-volatile BLDC_ECAT_OUT* const BLDC_OUT =&ram_buffer[ram_wr_start];
-volatile BLDC_ECAT_IN* const BLDC_IN =&ram_buffer[ram_rd_start];
+volatile BLDC_ECAT_OUT*  BLDC_OUT =&ram_buffer[ram_wr_start];
+volatile BLDC_ECAT_IN*  BLDC_IN =&ram_buffer[ram_rd_start];
 
+/*
 static void TIMER_task1_cb(const struct timer_task *const timer_task)
 {
-	triggerReadoutArray(&sensor1,&sensor2,&sensor3,&sensor4,&sensor5,&sensor6,&sensor7,&sensor8,&sensor9,bmx_io);
 	new_data = true;
 	timer_stop(&TIMER_1);
 };
@@ -109,11 +110,13 @@ void TIMER_init(uint16_t timer_interval)
 	timer_add_task(&TIMER_1, &TIMER_task1);
 	//timer_start(&TIMER_0);
 };
+*/
 
 void SensorRowUpdate(uint8_t row_select)
 {
 	switch(row_select){
 		case 1: ;
+			//BLDC_OUT->hall_bottom_x = BLDC_OUT->hall_bottom_x +1; //data1,2,3
 			BLDC_OUT->hall_bottom_x = sensor1.data.x; //data1,2,3
 			BLDC_OUT->hall_bottom_y = sensor1.data.y;
 			BLDC_OUT->hall_bottom_z = sensor1.data.z;
@@ -170,7 +173,7 @@ void SensorRowUpdate(uint8_t row_select)
 			BLDC_OUT->hall_middle_temp = 3;
 			break;
 		}
-}
+};
 
 
 int main(void)
@@ -196,23 +199,41 @@ int main(void)
 	//Initialize ReadoutVariables
 	new_data = false;
 	triggered = false;
+	data_readout = false;
 	wait_time = convDelayMicro(&sensor9);
-	TIMER_init(wait_time);
-	selected_row = 1; //1 = left, 2 = middle, 3 = right
+	//TIMER_init(wait_time);
+	NVIC_EnableIRQ(TC3_IRQn);
+	selected_row = 2; //1 = left, 2 = middle, 3 = right
 	
 	/* Replace with your application code */
 	while (1) {
 		
 		if (triggered == false)	{
 			BLDC_OUT->hall_middle_temp = 0;
-			triggerReadout_Prepare_Timer(50);
-			timer_start(&TIMER_1);
+			triggerSensor(50);
+			//triggerReadout_Prepare_Timer(50);
+	//		timer_start(&TIMER_1);
 			triggered = true;
+			data_readout = false;
 		}
-		if(new_data == true){	
+		if(new_data == true && data_readout == false){	
+			triggerReadoutArray(&sensor1,&sensor2,&sensor3,&sensor4,&sensor5,&sensor6,&sensor7,&sensor8,&sensor9,bmx_io);
 			SensorRowUpdate(selected_row);
 			new_data = false; 
-			triggered = false;
+			data_readout = true;
+			//triggered = false;
 		}
 	}
 }
+
+void TC3_Handler(void){
+	
+	if (TC3->COUNT16.INTFLAG.bit.OVF){
+		TC3->COUNT16.INTFLAG.bit.OVF =1;
+		triggered = false;
+	}
+	else if (TC3->COUNT16.INTFLAG.bit.MC1){
+		TC3->COUNT16.INTFLAG.bit.MC1 =1;
+		new_data = true;
+	}
+};
