@@ -11,11 +11,16 @@
 #include <Melexis/MLX90393_microchip.h>
 
 typedef struct sensorRow_Values{
+	
+	float b_x_top, b_x_middle, b_x_bottom;
+	float b_y_top, b_y_middle, b_y_bottom;
+	float b_z_top, b_z_middle, b_z_bottom;
 	float b_r_top, b_r_middle, b_r_bottom;
-	//float b_z_top, b_z_middle, b_z_bottom;
+	float force_x_top, force_x_middle, force_x_bottom;
+	float force_y_top, force_y_middle, force_y_bottom;
 	float force_z_top, force_z_middle, force_z_bottom;
 	float force_r_top, force_r_middle, force_r_bottom;
-};
+}sensorRow_Values;
 
 
 void triggerSensor(uint16_t pulseTime);
@@ -31,6 +36,7 @@ void SensorArray_Init(struct MLX90393 *hall_sensor_1, struct MLX90393 *hall_sens
 							struct MLX90393 *hall_sensor_4, struct MLX90393 *hall_sensor_5, struct MLX90393 *hall_sensor_6,
 							struct MLX90393 *hall_sensor_7, struct MLX90393 *hall_sensor_8, struct MLX90393 *hall_sensor_9,
 							struct io_descriptor *io);
-void mag_to_force(struct sensorRow_Values *sensor_row, struct MLX90393 *hall_sensor_top, struct MLX90393 *hall_sensor_middle, struct MLX90393 *hall_sensor_bottom);
+void update_struct_values(struct sensorRow_Values *sensor_row, struct MLX90393 *hall_sensor_top, struct MLX90393 *hall_sensor_middle, struct MLX90393 *hall_sensor_bottom);
+void mag_to_force(struct sensorRow_Values *sensor_row);
 
 #endif /* SENSORARRAY_H_ */

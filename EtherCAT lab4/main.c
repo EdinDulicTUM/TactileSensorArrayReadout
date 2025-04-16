@@ -25,25 +25,32 @@ struct MLX90393 sensor7;
 struct MLX90393 sensor8;
 struct MLX90393 sensor9;
 
+struct sensorRow_Values sensorRow_Values_Left;
+struct sensorRow_Values sensorRow_Values_Middle;
+struct sensorRow_Values sensorRow_Values_Right;
 
 // 
-struct fneuron_t neuron1_normal; 
-struct fneuron_t neuron1_shear; 
-struct fneuron_t neuron2_normal; 
-struct fneuron_t neuron2_shear; 
-struct fneuron_t neuron3_normal;
-struct fneuron_t neuron3_shear;
+struct neuron_pair neuron_pair_1_top; 
+struct neuron_pair neuron_pair_1_middle; 
+struct neuron_pair neuron_pair_1_bottom; 
+struct neuron_pair neuron_pair_2_top;
+struct neuron_pair neuron_pair_2_middle;
+struct neuron_pair neuron_pair_2_bottom;
+struct neuron_pair neuron_pair_3_top;
+struct neuron_pair neuron_pair_3_middle;
+struct neuron_pair neuron_pair_3_bottom;
 
-struct sensorRow_Values sensorRow_Values_1; 
-
-
+struct neuronRow_Values neuronRow_Values_Left;
+struct neuronRow_Values neuronRow_Values_Middle;
+struct neuronRow_Values neuronRow_Values_Right;
 
 //readout variables
 bool new_data;
 bool triggered;
 bool data_readout;
 uint16_t wait_time;
-uint8_t selected_row;
+uint8_t selected_row; //1,2,3
+uint8_t selected_output_mode; //1 Force , 2 Neural Spikes
 
 typedef struct  {
 	float hall_top_x;
@@ -112,11 +119,30 @@ void TIMER_init(uint16_t timer_interval)
 };
 */
 
-void SensorRowUpdate(uint8_t row_select)
+void SensorRowUpdate(uint8_t row_select, uint8_t output_mode_select)
 {
 	switch(row_select){
 		case 1: ;
-			//BLDC_OUT->hall_bottom_x = BLDC_OUT->hall_bottom_x +1; //data1,2,3
+			
+			update_struct_values(&sensorRow_Values_Left, &sensor1, &sensor4, &sensor7);
+			mag_to_force(&sensorRow_Values_Left);
+			//neuron_calc(&sensorRow_Values_1,&neuron1_normal,&neuron1_shear,&neuron2_normal,&neuron2_shear, &neuron3_normal,&neuron3_shear); for future implementation just a placeholder 
+			//update_struct_values_neural(struct neuronRow_Values *neuron_row, struct neuron_pair *neuron_pair_top, struct neuron_pair *neuron_pair_middle, struct neuron_pair *neuron_pair_bottom); Placeholder for future implementation 
+			
+			BLDC_OUT->hall_top_x = sensorRow_Values_Left.b_x_top; //data7,8,9
+			BLDC_OUT->hall_top_y = sensorRow_Values_Left.b_y_top;
+			BLDC_OUT->hall_top_z = sensorRow_Values_Left.b_z_top;
+				
+			BLDC_OUT->hall_middle_x = sensorRow_Values_Left.b_x_middle; //data4,5,6
+			BLDC_OUT->hall_middle_y = sensorRow_Values_Left.b_y_middle;
+			BLDC_OUT->hall_middle_z = sensorRow_Values_Left.b_z_middle;
+
+				
+			BLDC_OUT->hall_bottom_x = sensorRow_Values_Left.b_x_bottom; //data1,2,3
+			BLDC_OUT->hall_bottom_y = sensorRow_Values_Left.b_y_bottom;
+			BLDC_OUT->hall_bottom_z = sensorRow_Values_Left.b_z_bottom;
+				
+			/*
 			BLDC_OUT->hall_bottom_x = sensor1.data.x; //data1,2,3
 			BLDC_OUT->hall_bottom_y = sensor1.data.y;
 			BLDC_OUT->hall_bottom_z = sensor1.data.z;
@@ -128,6 +154,31 @@ void SensorRowUpdate(uint8_t row_select)
 			BLDC_OUT->hall_top_x = sensor7.data.x; //data7,8,9
 			BLDC_OUT->hall_top_y = sensor7.data.y;
 			BLDC_OUT->hall_top_z = sensor7.data.z;
+			*/
+			
+			switch(output_mode_select){
+				case 1: ;
+					BLDC_OUT->neuron_top_normal = sensorRow_Values_Left.force_z_top;
+					BLDC_OUT->neuron_top_shear = sensorRow_Values_Left.force_r_top;
+					
+					BLDC_OUT->neuron_middle_normal = sensorRow_Values_Left.force_z_middle;
+					BLDC_OUT->neuron_middle_shear = sensorRow_Values_Left.force_r_middle;
+					
+					BLDC_OUT->neuron_bottom_normal = sensorRow_Values_Left.force_z_bottom;
+					BLDC_OUT->neuron_bottom_shear = sensorRow_Values_Left.force_r_bottom;
+				break;
+				
+				case 2: ;
+				BLDC_OUT->neuron_top_normal = neuronRow_Values_Left.neuron_top_normal;
+				BLDC_OUT->neuron_top_shear = neuronRow_Values_Left.neuron_top_shear;
+				
+				BLDC_OUT->neuron_middle_normal = neuronRow_Values_Left.neuron_middle_normal;
+				BLDC_OUT->neuron_middle_shear = neuronRow_Values_Left.neuron_middle_shear;
+				
+				BLDC_OUT->neuron_bottom_normal = neuronRow_Values_Left.neuron_bottom_normal;
+				BLDC_OUT->neuron_bottom_shear = neuronRow_Values_Left.neuron_bottom_shear;
+				break;
+			}
 			
 			//mag_to_force(&sensorRow_Values_1, &sensor1, &sensor4, &sensor7);
 			//neuron_calc(&sensorRow_Values_1,&neuron1_normal,&neuron1_shear,&neuron2_normal,&neuron2_shear, &neuron3_normal,&neuron3_shear);
@@ -136,6 +187,50 @@ void SensorRowUpdate(uint8_t row_select)
 			break;
 		
 		case 2: ;
+			update_struct_values(&sensorRow_Values_Middle, &sensor2, &sensor5, &sensor8);
+			mag_to_force(&sensorRow_Values_Middle);
+			//neuron_calc(&sensorRow_Values_1,&neuron1_normal,&neuron1_shear,&neuron2_normal,&neuron2_shear, &neuron3_normal,&neuron3_shear); for future implementation just a placeholder
+			//update_struct_values_neural(struct neuronRow_Values *neuron_row, struct neuron_pair *neuron_pair_top, struct neuron_pair *neuron_pair_middle, struct neuron_pair *neuron_pair_bottom); Placeholder for future implementation
+			
+			BLDC_OUT->hall_top_x = sensorRow_Values_Middle.b_x_top; //data7,8,9
+			BLDC_OUT->hall_top_y = sensorRow_Values_Middle.b_y_top;
+			BLDC_OUT->hall_top_z = sensorRow_Values_Middle.b_z_top;
+			
+			BLDC_OUT->hall_middle_x = sensorRow_Values_Middle.b_x_middle; //data4,5,6
+			BLDC_OUT->hall_middle_y = sensorRow_Values_Middle.b_y_middle;
+			BLDC_OUT->hall_middle_z = sensorRow_Values_Middle.b_z_middle;
+
+			
+			BLDC_OUT->hall_bottom_x = sensorRow_Values_Middle.b_x_bottom; //data1,2,3
+			BLDC_OUT->hall_bottom_y = sensorRow_Values_Middle.b_y_bottom;
+			BLDC_OUT->hall_bottom_z = sensorRow_Values_Middle.b_z_bottom;
+			
+			switch(output_mode_select){
+				case 1: ;
+				BLDC_OUT->neuron_top_normal = sensorRow_Values_Middle.force_z_top;
+				BLDC_OUT->neuron_top_shear = sensorRow_Values_Middle.force_r_top;
+				
+				BLDC_OUT->neuron_middle_normal = sensorRow_Values_Middle.force_z_middle;
+				BLDC_OUT->neuron_middle_shear = sensorRow_Values_Middle.force_r_middle;
+				
+				BLDC_OUT->neuron_bottom_normal = sensorRow_Values_Middle.force_z_bottom;
+				BLDC_OUT->neuron_bottom_shear = sensorRow_Values_Middle.force_r_bottom;
+				break;
+				
+				case 2: ;
+				BLDC_OUT->neuron_top_normal = neuronRow_Values_Middle.neuron_top_normal;
+				BLDC_OUT->neuron_top_shear = neuronRow_Values_Middle.neuron_top_shear;
+			
+				BLDC_OUT->neuron_middle_normal = neuronRow_Values_Middle.neuron_middle_normal;
+				BLDC_OUT->neuron_middle_shear = neuronRow_Values_Middle.neuron_middle_shear;
+			
+				BLDC_OUT->neuron_bottom_normal = neuronRow_Values_Middle.neuron_bottom_normal;
+				BLDC_OUT->neuron_bottom_shear = neuronRow_Values_Middle.neuron_bottom_shear;
+				break;
+			}
+		
+		
+		/*
 			BLDC_OUT->hall_bottom_x = sensor2.data.x; //data1,2,3
 			BLDC_OUT->hall_bottom_y = sensor2.data.y;
 			BLDC_OUT->hall_bottom_z = sensor2.data.z;
@@ -147,7 +242,7 @@ void SensorRowUpdate(uint8_t row_select)
 			BLDC_OUT->hall_top_x = sensor8.data.x; //data7,8,9
 			BLDC_OUT->hall_top_y = sensor8.data.y;
 			BLDC_OUT->hall_top_z = sensor8.data.z;
-		
+		*/
 			//mag_to_force(&sensorRow_Values_1, &sensor2, &sensor5, &sensor8);
 			//neuron_calc(&sensorRow_Values_1,&neuron1_normal,&neuron1_shear,&neuron2_normal,&neuron2_shear, &neuron3_normal,&neuron3_shear);
 			
@@ -155,6 +250,50 @@ void SensorRowUpdate(uint8_t row_select)
 			break;
 			
 		case 3: ;
+			update_struct_values(&sensorRow_Values_Right, &sensor3, &sensor6, &sensor9);
+			mag_to_force(&sensorRow_Values_Right);
+			//neuron_calc(&sensorRow_Values_1,&neuron1_normal,&neuron1_shear,&neuron2_normal,&neuron2_shear, &neuron3_normal,&neuron3_shear); for future implementation just a placeholder
+			//update_struct_values_neural(struct neuronRow_Values *neuron_row, struct neuron_pair *neuron_pair_top, struct neuron_pair *neuron_pair_middle, struct neuron_pair *neuron_pair_bottom); Placeholder for future implementation
+			
+			
+			BLDC_OUT->hall_top_x = sensorRow_Values_Right.b_x_top; //data7,8,9
+			BLDC_OUT->hall_top_y = sensorRow_Values_Right.b_y_top;
+			BLDC_OUT->hall_top_z = sensorRow_Values_Right.b_z_top;
+			
+			BLDC_OUT->hall_middle_x = sensorRow_Values_Right.b_x_middle; //data4,5,6
+			BLDC_OUT->hall_middle_y = sensorRow_Values_Right.b_y_middle;
+			BLDC_OUT->hall_middle_z = sensorRow_Values_Right.b_z_middle;
+
+			
+			BLDC_OUT->hall_bottom_x = sensorRow_Values_Right.b_x_bottom; //data1,2,3
+			BLDC_OUT->hall_bottom_y = sensorRow_Values_Right.b_y_bottom;
+			BLDC_OUT->hall_bottom_z = sensorRow_Values_Right.b_z_bottom;
+			
+			switch(output_mode_select){
+				case 1: ;
+				BLDC_OUT->neuron_top_normal = sensorRow_Values_Right.force_z_top;
+				BLDC_OUT->neuron_top_shear = sensorRow_Values_Right.force_r_top;
+				
+				BLDC_OUT->neuron_middle_normal = sensorRow_Values_Right.force_z_middle;
+				BLDC_OUT->neuron_middle_shear = sensorRow_Values_Right.force_r_middle;
+				
+				BLDC_OUT->neuron_bottom_normal = sensorRow_Values_Right.force_z_bottom;
+				BLDC_OUT->neuron_bottom_shear = sensorRow_Values_Right.force_r_bottom;
+				break;
+				
+				case 2: ;
+				BLDC_OUT->neuron_top_normal = neuronRow_Values_Right.neuron_top_normal;
+				BLDC_OUT->neuron_top_shear = neuronRow_Values_Right.neuron_top_shear;
+				
+				BLDC_OUT->neuron_middle_normal = neuronRow_Values_Right.neuron_middle_normal;
+				BLDC_OUT->neuron_middle_shear = neuronRow_Values_Right.neuron_middle_shear;
+				
+				BLDC_OUT->neuron_bottom_normal = neuronRow_Values_Right.neuron_bottom_normal;
+				BLDC_OUT->neuron_bottom_shear = neuronRow_Values_Right.neuron_bottom_shear;
+				break;
+			}
+			
+			/*
 			BLDC_OUT->hall_bottom_x = sensor3.data.x; //data1,2,3
 			BLDC_OUT->hall_bottom_y = sensor3.data.y;
 			BLDC_OUT->hall_bottom_z = sensor3.data.z;
@@ -166,7 +305,7 @@ void SensorRowUpdate(uint8_t row_select)
 			BLDC_OUT->hall_top_x = sensor9.data.x; //data7,8,9
 			BLDC_OUT->hall_top_y = sensor9.data.y;
 			BLDC_OUT->hall_top_z = sensor9.data.z;
-			
+			*/
 			//mag_to_force(&sensorRow_Values_1, &sensor3, &sensor6, &sensor9);
 			//neuron_calc(&sensorRow_Values_1,&neuron1_normal,&neuron1_shear,&neuron2_normal,&neuron2_shear, &neuron3_normal,&neuron3_shear);
 			
@@ -192,7 +331,7 @@ int main(void)
 	
 	// Initialize Sensor Array
 	SensorArray_Init(&sensor1,&sensor2,&sensor3,&sensor4,&sensor5,&sensor6,&sensor7,&sensor8,&sensor9,bmx_io);
-	//neuron_init(&neuron1_normal,&neuron1_shear,&neuron2_normal,&neuron2_shear, &neuron3_normal,&neuron3_shear);
+	//neuron_init(&neuron1_normal,&neuron1_shear,&neuron2_normal,&neuron2_shear, &neuron3_normal,&neuron3_shear); Needs to be Implemented in future Version 
 
 	gpio_set_pin_level(TRG,false);
 	
@@ -204,7 +343,7 @@ int main(void)
 	//TIMER_init(wait_time);
 	NVIC_EnableIRQ(TC3_IRQn);
 	selected_row = 2; //1 = left, 2 = middle, 3 = right
-	
+	selected_output_mode = 1; //1 = Force, 2 = Neural Spikes
 	/* Replace with your application code */
 	while (1) {
 		
@@ -218,7 +357,7 @@ int main(void)
 		}
 		if(new_data == true && data_readout == false){	
 			triggerReadoutArray(&sensor1,&sensor2,&sensor3,&sensor4,&sensor5,&sensor6,&sensor7,&sensor8,&sensor9,bmx_io);
-			SensorRowUpdate(selected_row);
+			SensorRowUpdate(selected_row, selected_output_mode); //must be modified later to allow readout of whole array - for loop where every row is selected once
 			new_data = false; 
 			data_readout = true;
 			//triggered = false;
