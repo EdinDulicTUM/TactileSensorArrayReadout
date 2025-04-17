@@ -72,55 +72,55 @@ struct io_descriptor *io)
 	initialize(hall_sensor_1);
 	begin(hall_sensor_1,1,0,0,false, io);
 	triggerInitialize(hall_sensor_1, io);
-	delay_ms(1);
+	delay_ms(5);
 	
 	//bottom row middle
 	initialize(hall_sensor_2);
 	begin(hall_sensor_2,1,0,1,false, io);
 	triggerInitialize(hall_sensor_2, io);
-	delay_ms(1);
+	delay_ms(5);
 	
 	//bottom row right
 	initialize(hall_sensor_3);
 	begin(hall_sensor_3,1,1,0,false, io);
 	triggerInitialize(hall_sensor_3, io);
-	delay_ms(1);
+	delay_ms(5);
 	
 	//middle row left
 	initialize(hall_sensor_4);
 	begin(hall_sensor_4,2,0,0,false, io);
 	triggerInitialize(hall_sensor_4, io);
-	delay_ms(1);
+	delay_ms(5);
 	
 	//middle row middle
 	initialize(hall_sensor_5);
 	begin(hall_sensor_5,2,0,1,false, io);
 	triggerInitialize(hall_sensor_5, io);
-	delay_ms(1);
+	delay_ms(5);
 	
 	//middle row right
 	initialize(hall_sensor_6);
 	begin(hall_sensor_6,2,1,0,false, io);
 	triggerInitialize(hall_sensor_6, io);
-	delay_ms(1);
+	delay_ms(5);
 	
 	//top row left
 	initialize(hall_sensor_7);
 	begin(hall_sensor_7,3,0,0,false, io);
 	triggerInitialize(hall_sensor_7, io);
-	delay_ms(1);
+	delay_ms(5);
 	
 	//top row middle
 	initialize(hall_sensor_8);
 	begin(hall_sensor_8,3,0,1,false, io);
 	triggerInitialize(hall_sensor_8, io);
-	delay_ms(1);
+	delay_ms(5);
 	
 	//top row right
 	initialize(hall_sensor_9);
 	begin(hall_sensor_9,3,1,0,false, io);
 	triggerInitialize(hall_sensor_9, io);
-	delay_ms(1);
+	delay_ms(5);
 }
 
 

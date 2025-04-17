@@ -16,8 +16,8 @@ typedef struct fneuron_t{
 } fneuron_t;
 
 typedef struct neuron_pair{
-	struct fneuron_t *neuron_normal;
-	struct fneuron_t *neuron_shear;
+	struct fneuron_t neuron_normal;
+	struct fneuron_t neuron_shear;
 	}neuron_pair;
 	
 typedef struct neuronRow_Values{

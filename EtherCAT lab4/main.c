@@ -126,8 +126,8 @@ void SensorRowUpdate(uint8_t row_select, uint8_t output_mode_select)
 			
 			update_struct_values(&sensorRow_Values_Left, &sensor7, &sensor4, &sensor1);
 			mag_to_force(&sensorRow_Values_Left);
-			//neuron_calc(&sensorRow_Values_1,&neuron1_normal,&neuron1_shear,&neuron2_normal,&neuron2_shear, &neuron3_normal,&neuron3_shear); for future implementation just a placeholder 
-			//update_struct_values_neural(struct neuronRow_Values *neuron_row, struct neuron_pair *neuron_pair_top, struct neuron_pair *neuron_pair_middle, struct neuron_pair *neuron_pair_bottom); Placeholder for future implementation 
+			neuron_calc_row(&sensorRow_Values_Left, &neuron_pair_1_top, &neuron_pair_1_middle, &neuron_pair_1_bottom);
+			update_struct_values_neural(&neuronRow_Values_Left, &neuron_pair_1_top, &neuron_pair_1_middle, &neuron_pair_1_bottom);
 			
 			BLDC_OUT->hall_top_x = sensorRow_Values_Left.b_x_top; //data7,8,9
 			BLDC_OUT->hall_top_y = sensorRow_Values_Left.b_y_top;
@@ -189,8 +189,8 @@ void SensorRowUpdate(uint8_t row_select, uint8_t output_mode_select)
 		case 2: ;
 			update_struct_values(&sensorRow_Values_Middle, &sensor8, &sensor5, &sensor2);
 			mag_to_force(&sensorRow_Values_Middle);
-			//neuron_calc(&sensorRow_Values_1,&neuron1_normal,&neuron1_shear,&neuron2_normal,&neuron2_shear, &neuron3_normal,&neuron3_shear); for future implementation just a placeholder
-			//update_struct_values_neural(struct neuronRow_Values *neuron_row, struct neuron_pair *neuron_pair_top, struct neuron_pair *neuron_pair_middle, struct neuron_pair *neuron_pair_bottom); Placeholder for future implementation
+			neuron_calc_row(&sensorRow_Values_Middle, &neuron_pair_2_top, &neuron_pair_2_middle, &neuron_pair_2_bottom);
+			update_struct_values_neural(&neuronRow_Values_Middle, &neuron_pair_2_top, &neuron_pair_2_middle, &neuron_pair_2_bottom);
 			
 			BLDC_OUT->hall_top_x = sensorRow_Values_Middle.b_x_top; //data7,8,9
 			BLDC_OUT->hall_top_y = sensorRow_Values_Middle.b_y_top;
@@ -252,9 +252,8 @@ void SensorRowUpdate(uint8_t row_select, uint8_t output_mode_select)
 		case 3: ;
 			update_struct_values(&sensorRow_Values_Right, &sensor9, &sensor6, &sensor3);
 			mag_to_force(&sensorRow_Values_Right);
-			//neuron_calc(&sensorRow_Values_1,&neuron1_normal,&neuron1_shear,&neuron2_normal,&neuron2_shear, &neuron3_normal,&neuron3_shear); for future implementation just a placeholder
-			//update_struct_values_neural(struct neuronRow_Values *neuron_row, struct neuron_pair *neuron_pair_top, struct neuron_pair *neuron_pair_middle, struct neuron_pair *neuron_pair_bottom); Placeholder for future implementation
-			
+			neuron_calc_row(&sensorRow_Values_Right, &neuron_pair_3_top, &neuron_pair_3_middle, &neuron_pair_3_bottom);
+			update_struct_values_neural(&neuronRow_Values_Right, &neuron_pair_3_top, &neuron_pair_3_middle, &neuron_pair_3_bottom);
 			
 			BLDC_OUT->hall_top_x = sensorRow_Values_Right.b_x_top; //data7,8,9
 			BLDC_OUT->hall_top_y = sensorRow_Values_Right.b_y_top;
@@ -331,7 +330,7 @@ int main(void)
 	
 	// Initialize Sensor Array
 	SensorArray_Init(&sensor1,&sensor2,&sensor3,&sensor4,&sensor5,&sensor6,&sensor7,&sensor8,&sensor9,bmx_io);
-	//neuron_init(&neuron1_normal,&neuron1_shear,&neuron2_normal,&neuron2_shear, &neuron3_normal,&neuron3_shear); Needs to be Implemented in future Version 
+	neuron_init_row(&neuron_pair_2_top, &neuron_pair_2_middle, &neuron_pair_2_bottom);
 
 	gpio_set_pin_level(TRG,false);
 	
@@ -343,7 +342,7 @@ int main(void)
 	//TIMER_init(wait_time);
 	NVIC_EnableIRQ(TC3_IRQn);
 	selected_row = 2; //1 = left, 2 = middle, 3 = right
-	selected_output_mode = 1; //1 = Force, 2 = Neural Spikes
+	selected_output_mode = 2; //1 = Force, 2 = Neural Spikes
 	/* Replace with your application code */
 	while (1) {
 		
