@@ -124,7 +124,7 @@ void SensorRowUpdate(uint8_t row_select, uint8_t output_mode_select)
 	switch(row_select){
 		case 1: ;
 			
-			update_struct_values(&sensorRow_Values_Left, &sensor1, &sensor4, &sensor7);
+			update_struct_values(&sensorRow_Values_Left, &sensor7, &sensor4, &sensor1);
 			mag_to_force(&sensorRow_Values_Left);
 			//neuron_calc(&sensorRow_Values_1,&neuron1_normal,&neuron1_shear,&neuron2_normal,&neuron2_shear, &neuron3_normal,&neuron3_shear); for future implementation just a placeholder 
 			//update_struct_values_neural(struct neuronRow_Values *neuron_row, struct neuron_pair *neuron_pair_top, struct neuron_pair *neuron_pair_middle, struct neuron_pair *neuron_pair_bottom); Placeholder for future implementation 
@@ -187,7 +187,7 @@ void SensorRowUpdate(uint8_t row_select, uint8_t output_mode_select)
 			break;
 		
 		case 2: ;
-			update_struct_values(&sensorRow_Values_Middle, &sensor2, &sensor5, &sensor8);
+			update_struct_values(&sensorRow_Values_Middle, &sensor8, &sensor5, &sensor2);
 			mag_to_force(&sensorRow_Values_Middle);
 			//neuron_calc(&sensorRow_Values_1,&neuron1_normal,&neuron1_shear,&neuron2_normal,&neuron2_shear, &neuron3_normal,&neuron3_shear); for future implementation just a placeholder
 			//update_struct_values_neural(struct neuronRow_Values *neuron_row, struct neuron_pair *neuron_pair_top, struct neuron_pair *neuron_pair_middle, struct neuron_pair *neuron_pair_bottom); Placeholder for future implementation
@@ -250,7 +250,7 @@ void SensorRowUpdate(uint8_t row_select, uint8_t output_mode_select)
 			break;
 			
 		case 3: ;
-			update_struct_values(&sensorRow_Values_Right, &sensor3, &sensor6, &sensor9);
+			update_struct_values(&sensorRow_Values_Right, &sensor9, &sensor6, &sensor3);
 			mag_to_force(&sensorRow_Values_Right);
 			//neuron_calc(&sensorRow_Values_1,&neuron1_normal,&neuron1_shear,&neuron2_normal,&neuron2_shear, &neuron3_normal,&neuron3_shear); for future implementation just a placeholder
 			//update_struct_values_neural(struct neuronRow_Values *neuron_row, struct neuron_pair *neuron_pair_top, struct neuron_pair *neuron_pair_middle, struct neuron_pair *neuron_pair_bottom); Placeholder for future implementation

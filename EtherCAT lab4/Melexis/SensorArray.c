@@ -72,46 +72,55 @@ struct io_descriptor *io)
 	initialize(hall_sensor_1);
 	begin(hall_sensor_1,1,0,0,false, io);
 	triggerInitialize(hall_sensor_1, io);
+	delay_ms(1);
 	
 	//bottom row middle
 	initialize(hall_sensor_2);
 	begin(hall_sensor_2,1,0,1,false, io);
 	triggerInitialize(hall_sensor_2, io);
+	delay_ms(1);
 	
 	//bottom row right
 	initialize(hall_sensor_3);
 	begin(hall_sensor_3,1,1,0,false, io);
 	triggerInitialize(hall_sensor_3, io);
+	delay_ms(1);
 	
 	//middle row left
 	initialize(hall_sensor_4);
 	begin(hall_sensor_4,2,0,0,false, io);
 	triggerInitialize(hall_sensor_4, io);
+	delay_ms(1);
 	
 	//middle row middle
 	initialize(hall_sensor_5);
 	begin(hall_sensor_5,2,0,1,false, io);
 	triggerInitialize(hall_sensor_5, io);
+	delay_ms(1);
 	
 	//middle row right
 	initialize(hall_sensor_6);
 	begin(hall_sensor_6,2,1,0,false, io);
 	triggerInitialize(hall_sensor_6, io);
+	delay_ms(1);
 	
 	//top row left
 	initialize(hall_sensor_7);
 	begin(hall_sensor_7,3,0,0,false, io);
 	triggerInitialize(hall_sensor_7, io);
+	delay_ms(1);
 	
 	//top row middle
 	initialize(hall_sensor_8);
 	begin(hall_sensor_8,3,0,1,false, io);
 	triggerInitialize(hall_sensor_8, io);
+	delay_ms(1);
 	
 	//top row right
 	initialize(hall_sensor_9);
 	begin(hall_sensor_9,3,1,0,false, io);
 	triggerInitialize(hall_sensor_9, io);
+	delay_ms(1);
 }
 
 
@@ -154,23 +163,23 @@ void update_struct_values(struct sensorRow_Values *sensor_row, struct MLX90393 *
 
 void mag_to_force(struct sensorRow_Values *sensor_row){
 	
-	sensor_row->force_x_top= 13.33 - (0.003288*sensor_row->b_x_top) + (0.003361*sensor_row->b_z_top) + (0.000000724*(exp2(sensor_row->b_x_top))) - (0.0000006201*(sensor_row->b_x_top*sensor_row->b_z_top)) + (0.0000002654*(exp2(sensor_row->b_z_top))) + (0.00000000004886*((exp2(sensor_row->b_x_top))*sensor_row->b_z_top)) - (0.0000000000242*(sensor_row->b_x_top*(exp2(sensor_row->b_z_top)))) + (0.000000000006595*((exp2(sensor_row->b_z_top))*sensor_row->b_z_top));
-	sensor_row->force_y_top= 2.824 - (0.0004832*sensor_row->b_y_top) + (0.001006*sensor_row->b_z_top) + (0.000000521*(exp2(sensor_row->b_y_top))) - (0.0000003988*(sensor_row->b_y_top*sensor_row->b_z_top)) + (0.000000135*(exp2(sensor_row->b_z_top))) + (0.00000000003199*((exp2(sensor_row->b_y_top))*sensor_row->b_z_top)) - (0.0000000000218*(sensor_row->b_y_top*(exp2(sensor_row->b_z_top)))) + (0.000000000004829*((exp2(sensor_row->b_z_top))*sensor_row->b_z_top));
-	sensor_row->force_z_top= 24.47 - (0.004608*sensor_row->b_r_top) + (0.006606*sensor_row->b_z_top) + (0.0000003998*(exp2(sensor_row->b_r_top))) - (0.0000006645*(sensor_row->b_r_top*sensor_row->b_z_top)) + (0.0000005293*(exp2(sensor_row->b_z_top))) + (0.000000000006865*((exp2(sensor_row->b_r_top))*sensor_row->b_z_top)) - (0.00000000002459*(sensor_row->b_r_top*(exp2(sensor_row->b_z_top)))) + (0.0000000000106*((exp2(sensor_row->b_z_top))*sensor_row->b_z_top));
-	sensor_row->force_r_top= exp2(sensor_row->force_x_top) + exp2(sensor_row->force_y_top);
+	sensor_row->force_x_top= 13.33 - (0.003288*sensor_row->b_x_top) + (0.003361*sensor_row->b_z_top) + (0.000000724*(sensor_row->b_x_top*sensor_row->b_x_top)) - (0.0000006201*(sensor_row->b_x_top*sensor_row->b_z_top)) + (0.0000002654*(sensor_row->b_z_top*sensor_row->b_z_top)) + (0.00000000004886*((sensor_row->b_x_top*sensor_row->b_x_top)*sensor_row->b_z_top)) - (0.0000000000242*(sensor_row->b_x_top*(sensor_row->b_z_top*sensor_row->b_z_top))) + (0.000000000006595*((sensor_row->b_z_top*sensor_row->b_z_top)*sensor_row->b_z_top));
+	sensor_row->force_y_top= 2.824 - (0.0004832*sensor_row->b_y_top) + (0.001006*sensor_row->b_z_top) + (0.000000521*(sensor_row->b_y_top*sensor_row->b_y_top)) - (0.0000003988*(sensor_row->b_y_top*sensor_row->b_z_top)) + (0.000000135*(sensor_row->b_z_top*sensor_row->b_z_top)) + (0.00000000003199*((sensor_row->b_y_top*sensor_row->b_y_top)*sensor_row->b_z_top)) - (0.0000000000218*(sensor_row->b_y_top*(sensor_row->b_z_top*sensor_row->b_z_top))) + (0.000000000004829*((sensor_row->b_z_top*sensor_row->b_z_top)*sensor_row->b_z_top));
+	sensor_row->force_z_top= 24.47 - (0.004608*sensor_row->b_r_top) + (0.006606*sensor_row->b_z_top) + (0.0000003998*(sensor_row->b_r_top*sensor_row->b_r_top)) - (0.0000006645*(sensor_row->b_r_top*sensor_row->b_z_top)) + (0.0000005293*(sensor_row->b_z_top*sensor_row->b_z_top)) + (0.000000000006865*((sensor_row->b_r_top*sensor_row->b_r_top)*sensor_row->b_z_top)) - (0.00000000002459*(sensor_row->b_r_top*(sensor_row->b_z_top*sensor_row->b_z_top))) + (0.0000000000106*((sensor_row->b_z_top*sensor_row->b_z_top)*sensor_row->b_z_top));
+	sensor_row->force_r_top= (sensor_row->force_x_top*sensor_row->force_x_top) + (sensor_row->force_y_top*sensor_row->force_y_top);
 	sensor_row->force_r_top = sqrt(sensor_row->force_r_top);
 	
-	sensor_row->force_x_middle= 1.411 - (0.0002827*sensor_row->b_x_middle) + (0.0003494*sensor_row->b_z_middle) + (0.0000001662*(exp2(sensor_row->b_x_middle))) - (0.0000001945*(sensor_row->b_x_middle*sensor_row->b_z_middle)) + (0.00000003569*(exp2(sensor_row->b_z_middle))) + (0.0000000000112*((exp2(sensor_row->b_x_middle))*sensor_row->b_z_middle)) - (0.000000000009128*(sensor_row->b_x_middle*(exp2(sensor_row->b_z_middle)))) + (0.000000000001119*((exp2(sensor_row->b_z_middle))*sensor_row->b_z_middle));
-	sensor_row->force_y_middle= 7.812 - (0.004493*sensor_row->b_y_middle) + (0.002601*sensor_row->b_z_middle) - (0.0000001078*(exp2(sensor_row->b_y_middle))) - (0.0000007358*(sensor_row->b_y_middle*sensor_row->b_z_middle)) + (0.0000002632*(exp2(sensor_row->b_z_middle))) - (0.00000000001189*((exp2(sensor_row->b_y_middle))*sensor_row->b_z_middle)) - (0.00000000002614*(sensor_row->b_y_middle*(exp2(sensor_row->b_z_middle)))) + (0.000000000007836*((exp2(sensor_row->b_z_middle))*sensor_row->b_z_middle));
-	sensor_row->force_z_middle= 14.21 - (0.005789*sensor_row->b_r_middle) + (0.004071*sensor_row->b_z_middle) + (0.0000005279*(exp2(sensor_row->b_r_middle))) - (0.0000007658*(sensor_row->b_r_middle*sensor_row->b_z_middle)) + (0.0000003383*(exp2(sensor_row->b_z_middle))) + (0.00000000001514*((exp2(sensor_row->b_r_middle))*sensor_row->b_z_middle)) - (0.00000000002614*(sensor_row->b_r_middle*(exp2(sensor_row->b_z_middle)))) + (0.000000000006038*((exp2(sensor_row->b_z_middle))*sensor_row->b_z_middle));
-	sensor_row->force_r_middle= exp2(sensor_row->force_x_middle) + exp2(sensor_row->force_y_middle);
+	sensor_row->force_x_middle= 1.411 - (0.0002827*sensor_row->b_x_middle) + (0.0003494*sensor_row->b_z_middle) + (0.0000001662*(sensor_row->b_x_middle*sensor_row->b_x_middle)) - (0.0000001945*(sensor_row->b_x_middle*sensor_row->b_z_middle)) + (0.00000003569*(sensor_row->b_z_middle*sensor_row->b_z_middle)) + (0.0000000000112*((sensor_row->b_x_middle*sensor_row->b_x_middle)*sensor_row->b_z_middle)) - (0.000000000009128*(sensor_row->b_x_middle*(sensor_row->b_z_middle*sensor_row->b_z_middle))) + (0.000000000001119*((sensor_row->b_z_middle*sensor_row->b_z_middle)*sensor_row->b_z_middle));
+	sensor_row->force_y_middle= 7.812 - (0.004493*sensor_row->b_y_middle) + (0.002601*sensor_row->b_z_middle) - (0.0000001078*(sensor_row->b_y_middle*sensor_row->b_y_middle)) - (0.0000007358*(sensor_row->b_y_middle*sensor_row->b_z_middle)) + (0.0000002632*(sensor_row->b_z_middle*sensor_row->b_z_middle)) - (0.00000000001189*((sensor_row->b_y_middle*sensor_row->b_y_middle)*sensor_row->b_z_middle)) - (0.00000000002614*(sensor_row->b_y_middle*(sensor_row->b_z_middle*sensor_row->b_z_middle))) + (0.000000000007836*((sensor_row->b_z_middle*sensor_row->b_z_middle)*sensor_row->b_z_middle));
+	sensor_row->force_z_middle= 14.21 - (0.005789*sensor_row->b_r_middle) + (0.004071*sensor_row->b_z_middle) + (0.0000005279*(sensor_row->b_r_middle*sensor_row->b_r_middle)) - (0.0000007658*(sensor_row->b_r_middle*sensor_row->b_z_middle)) + (0.0000003383*(sensor_row->b_z_middle*sensor_row->b_z_middle)) + (0.00000000001514*((sensor_row->b_r_middle*sensor_row->b_r_middle)*sensor_row->b_z_middle)) - (0.00000000002614*(sensor_row->b_r_middle*(sensor_row->b_z_middle*sensor_row->b_z_middle))) + (0.000000000006038*((sensor_row->b_z_middle*sensor_row->b_z_middle)*sensor_row->b_z_middle));
+	sensor_row->force_r_middle= (sensor_row->force_x_middle*sensor_row->force_x_middle) + (sensor_row->force_y_middle*sensor_row->force_y_middle);
 	sensor_row->force_r_middle = sqrt(sensor_row->force_r_middle);
 	
 	
-	sensor_row->force_x_bottom= -10.33 - (0.003475*sensor_row->b_x_bottom) - (0.003007 *sensor_row->b_z_bottom) - (0.0000006456*(exp2(sensor_row->b_x_bottom))) - (0.0000007356*(sensor_row->b_x_bottom*sensor_row->b_z_bottom)) - (0.0000002724*(exp2(sensor_row->b_z_bottom))) - (0.00000000004405*((exp2(sensor_row->b_x_bottom))*sensor_row->b_z_bottom)) - (0.00000000003177*(sensor_row->b_x_bottom*(exp2(sensor_row->b_z_bottom)))) - (0.00000000000747*((exp2(sensor_row->b_z_bottom))*sensor_row->b_z_bottom));
-	sensor_row->force_y_bottom= -2.141 + (0.002644*sensor_row->b_y_bottom) - (0.000585*sensor_row->b_z_bottom) + (0.0000005642*(exp2(sensor_row->b_y_bottom))) + (0.0000001582*(sensor_row->b_y_bottom*sensor_row->b_z_bottom)) - (0.00000003274*(exp2(sensor_row->b_z_bottom))) + (0.00000000004031*((exp2(sensor_row->b_y_bottom))*sensor_row->b_z_bottom)) + (0.000000000000689*(sensor_row->b_y_bottom*(exp2(sensor_row->b_z_bottom)))) - (0.0000000000005236*((exp2(sensor_row->b_z_bottom))*sensor_row->b_z_bottom));
-	sensor_row->force_z_bottom= 25.61 - (0.005403*sensor_row->b_r_bottom) + (0.007253*sensor_row->b_z_bottom) + (0.000001078*(exp2(sensor_row->b_r_bottom))) - (0.0000006989*sensor_row->b_r_bottom*sensor_row->b_z_bottom) + (0.0000006109*(exp2(sensor_row->b_z_bottom))) + (0.00000000005541*(exp2(sensor_row->b_r_bottom))*sensor_row->b_z_bottom) - (0.00000000002099*sensor_row->b_r_bottom*(exp2(sensor_row->b_z_bottom))) + (0.00000000001312*(exp2(sensor_row->b_z_bottom))*sensor_row->b_z_bottom);
-	sensor_row->force_r_bottom= exp2(sensor_row->force_x_bottom) + exp2(sensor_row->force_y_bottom);
+	sensor_row->force_x_bottom= -10.33 - (0.003475*sensor_row->b_x_bottom) - (0.003007 *sensor_row->b_z_bottom) - (0.0000006456*(sensor_row->b_x_bottom*sensor_row->b_x_bottom)) - (0.0000007356*(sensor_row->b_x_bottom*sensor_row->b_z_bottom)) - (0.0000002724*(sensor_row->b_z_bottom*sensor_row->b_z_bottom)) - (0.00000000004405*((sensor_row->b_x_bottom*sensor_row->b_x_bottom)*sensor_row->b_z_bottom)) - (0.00000000003177*(sensor_row->b_x_bottom*(sensor_row->b_z_bottom*sensor_row->b_z_bottom))) - (0.00000000000747*((sensor_row->b_z_bottom*sensor_row->b_z_bottom)*sensor_row->b_z_bottom));
+	sensor_row->force_y_bottom= -2.141 + (0.002644*sensor_row->b_y_bottom) - (0.000585*sensor_row->b_z_bottom) + (0.0000005642*(sensor_row->b_y_bottom*sensor_row->b_y_bottom)) + (0.0000001582*(sensor_row->b_y_bottom*sensor_row->b_z_bottom)) - (0.00000003274*(sensor_row->b_z_bottom*sensor_row->b_z_bottom)) + (0.00000000004031*((sensor_row->b_y_bottom*sensor_row->b_y_bottom)*sensor_row->b_z_bottom)) + (0.000000000000689*(sensor_row->b_y_bottom*(sensor_row->b_z_bottom*sensor_row->b_z_bottom))) - (0.0000000000005236*((sensor_row->b_z_bottom*sensor_row->b_z_bottom)*sensor_row->b_z_bottom));
+	sensor_row->force_z_bottom= 25.61 - (0.005403*sensor_row->b_r_bottom) + (0.007253*sensor_row->b_z_bottom) + (0.000001078*(sensor_row->b_r_bottom*sensor_row->b_r_bottom)) - (0.0000006989*sensor_row->b_r_bottom*sensor_row->b_z_bottom) + (0.0000006109*(sensor_row->b_z_bottom*sensor_row->b_z_bottom)) + (0.00000000005541*(sensor_row->b_r_bottom*sensor_row->b_r_bottom)*sensor_row->b_z_bottom) - (0.00000000002099*sensor_row->b_r_bottom*(sensor_row->b_z_bottom*sensor_row->b_z_bottom)) + (0.00000000001312*(sensor_row->b_z_bottom*sensor_row->b_z_bottom)*sensor_row->b_z_bottom);
+	sensor_row->force_r_bottom= (sensor_row->force_x_bottom*sensor_row->force_x_bottom) + (sensor_row->force_y_bottom*sensor_row->force_y_bottom);
 	sensor_row->force_r_bottom = sqrt(sensor_row->force_r_bottom);
 	
 	/*
