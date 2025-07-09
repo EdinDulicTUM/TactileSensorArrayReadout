@@ -341,26 +341,43 @@ int main(void)
 	wait_time = convDelayMicro(&sensor9);
 	//TIMER_init(wait_time);
 	NVIC_EnableIRQ(TC3_IRQn);
-	selected_row = 2; //1 = left, 2 = middle, 3 = right
-	selected_output_mode = 2; //1 = Force, 2 = Neural Spikes
+	selected_row = 1; //1 = left, 2 = middle, 3 = right
+	selected_output_mode = 1; //1 = Force, 2 = Neural Spikes
 	/* Replace with your application code */
-	while (1) {
+	while (1) 
+	{
 		
-		if (triggered == false)	{
-			BLDC_OUT->hall_middle_temp = 0;
+		if (triggered == false)	
+		{
+			//BLDC_OUT->hall_middle_temp = 0;
 			triggerSensor(50);
 			//triggerReadout_Prepare_Timer(50);
 	//		timer_start(&TIMER_1);
 			triggered = true;
 			data_readout = false;
 		}
-		if(new_data == true && data_readout == false){	
+		
+		if(new_data == true && data_readout == false)
+		{	
 			triggerReadoutArray(&sensor1,&sensor2,&sensor3,&sensor4,&sensor5,&sensor6,&sensor7,&sensor8,&sensor9,bmx_io);
-			SensorRowUpdate(selected_row, selected_output_mode); //must be modified later to allow readout of whole array - for loop where every row is selected once
 			new_data = false; 
 			data_readout = true;
-			//triggered = false;
 		}
+		
+		if(data_readout == true && row_change_possible == true)
+		{
+				SensorRowUpdate(selected_row, selected_output_mode); //must be modified later to allow readout of whole array - for loop where every row is selected once
+				selected_row++;
+				if (selected_row == 4)
+				{
+					selected_row = 1 ;
+				}
+		}
+			//BLDC_OUT->hall_middle_temp = 0;
+			//new_data = false; 
+			//data_readout = true;
+			//triggered = false;
+		
 	}
 }
 

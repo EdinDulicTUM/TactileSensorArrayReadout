@@ -102,6 +102,7 @@ enum dma_transfer_descriptor_type {
 
 volatile bool tx_ethercat;
 volatile bool tx_ethercat_done;
+volatile bool row_change_possible; // for array readout of wearable tactile sensor
 
 // ----------------------------------------------------------------------
 // DMA descriptors

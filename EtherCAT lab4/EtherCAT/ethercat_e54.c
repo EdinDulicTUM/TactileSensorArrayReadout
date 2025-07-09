@@ -57,7 +57,7 @@ static void LAN9252_rx_done(struct _dma_resource *resource)
 
 static void LAN9252_rx_susp(struct _dma_resource *resource)
 {
-	gpio_set_pin_level(ECAT_SPI_CS_PIN, true);		//volatile uint32_t *pointer = ((DMAC->WRBADDR.reg)+0x10*resource->channel_id+12);	volatile uint32_t *pointer = ((DMAC->WRBADDR.reg)+12);	if (*pointer != &spi_rx_write_fifo_dma_descriptor){		DMAC->Channel[0].CHCTRLB.reg = 0x2; // Resume		gpio_set_pin_level(ECAT_SPI_CS_PIN, false);		DMAC->Channel[1].CHCTRLB.reg = 0x2; // Resume		tx_ethercat_done = false;	}	else{		tx_ethercat_done = true;		NVIC_EnableIRQ(TC7_IRQn);	}
+	gpio_set_pin_level(ECAT_SPI_CS_PIN, true);		//volatile uint32_t *pointer = ((DMAC->WRBADDR.reg)+0x10*resource->channel_id+12);	volatile uint32_t *pointer = ((DMAC->WRBADDR.reg)+12);	if (*pointer != &spi_rx_write_fifo_dma_descriptor){		DMAC->Channel[0].CHCTRLB.reg = 0x2; // Resume		gpio_set_pin_level(ECAT_SPI_CS_PIN, false);		DMAC->Channel[1].CHCTRLB.reg = 0x2; // Resume		tx_ethercat_done = false;	}	else{		tx_ethercat_done = true;		row_change_possible = true; // for readout of array of wearable tactile sensor		NVIC_EnableIRQ(TC7_IRQn);	}
 }
 
 
