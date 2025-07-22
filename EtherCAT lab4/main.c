@@ -52,6 +52,9 @@ uint16_t wait_time;
 uint8_t selected_row; //1,2,3
 uint8_t selected_output_mode; //1 Force , 2 Neural Spikes
 
+// test variables 
+
+
 typedef struct  {
 	float hall_top_x;
 	float hall_top_y;
@@ -125,7 +128,7 @@ void SensorRowUpdate(uint8_t row_select, uint8_t output_mode_select)
 		case 1: ;
 			
 			update_struct_values(&sensorRow_Values_Left, &sensor7, &sensor4, &sensor1);
-			mag_to_force(&sensorRow_Values_Left);
+			mag_to_force(1, &sensorRow_Values_Left);
 			neuron_calc_row(&sensorRow_Values_Left, &neuron_pair_1_top, &neuron_pair_1_middle, &neuron_pair_1_bottom);
 			update_struct_values_neural(&neuronRow_Values_Left, &neuron_pair_1_top, &neuron_pair_1_middle, &neuron_pair_1_bottom);
 			
@@ -188,7 +191,7 @@ void SensorRowUpdate(uint8_t row_select, uint8_t output_mode_select)
 		
 		case 2: ;
 			update_struct_values(&sensorRow_Values_Middle, &sensor8, &sensor5, &sensor2);
-			mag_to_force(&sensorRow_Values_Middle);
+			mag_to_force(2, &sensorRow_Values_Middle);
 			neuron_calc_row(&sensorRow_Values_Middle, &neuron_pair_2_top, &neuron_pair_2_middle, &neuron_pair_2_bottom);
 			update_struct_values_neural(&neuronRow_Values_Middle, &neuron_pair_2_top, &neuron_pair_2_middle, &neuron_pair_2_bottom);
 			
@@ -251,7 +254,7 @@ void SensorRowUpdate(uint8_t row_select, uint8_t output_mode_select)
 			
 		case 3: ;
 			update_struct_values(&sensorRow_Values_Right, &sensor9, &sensor6, &sensor3);
-			mag_to_force(&sensorRow_Values_Right);
+			mag_to_force(3, &sensorRow_Values_Right);
 			neuron_calc_row(&sensorRow_Values_Right, &neuron_pair_3_top, &neuron_pair_3_middle, &neuron_pair_3_bottom);
 			update_struct_values_neural(&neuronRow_Values_Right, &neuron_pair_3_top, &neuron_pair_3_middle, &neuron_pair_3_bottom);
 			
@@ -344,15 +347,13 @@ int main(void)
 	selected_row = 1; //1 = left, 2 = middle, 3 = right
 	selected_output_mode = 1; //1 = Force, 2 = Neural Spikes
 	/* Replace with your application code */
+	 
 	while (1) 
 	{
 		
 		if (triggered == false)	
 		{
-			//BLDC_OUT->hall_middle_temp = 0;
 			triggerSensor(50);
-			//triggerReadout_Prepare_Timer(50);
-	//		timer_start(&TIMER_1);
 			triggered = true;
 			data_readout = false;
 		}
@@ -364,10 +365,11 @@ int main(void)
 			data_readout = true;
 		}
 		
-		if(data_readout == true && row_change_possible == true)
+		if(data_readout == true && row_change_possible == true )
 		{
 				SensorRowUpdate(selected_row, selected_output_mode); //must be modified later to allow readout of whole array - for loop where every row is selected once
-				selected_row++;
+				selected_row++;	
+				row_change_possible == false;
 				if (selected_row == 4)
 				{
 					selected_row = 1 ;

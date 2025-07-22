@@ -37,6 +37,6 @@ void SensorArray_Init(struct MLX90393 *hall_sensor_1, struct MLX90393 *hall_sens
 							struct MLX90393 *hall_sensor_7, struct MLX90393 *hall_sensor_8, struct MLX90393 *hall_sensor_9,
 							struct io_descriptor *io);
 void update_struct_values(struct sensorRow_Values *sensor_row, struct MLX90393 *hall_sensor_top, struct MLX90393 *hall_sensor_middle, struct MLX90393 *hall_sensor_bottom);
-void mag_to_force(struct sensorRow_Values *sensor_row);
+void mag_to_force(uint8_t row_select, struct sensorRow_Values *sensor_row);
 
 #endif /* SENSORARRAY_H_ */
