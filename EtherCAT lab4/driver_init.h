@@ -24,12 +24,16 @@ extern "C" {
 #include <hal_i2c_m_sync.h>
 
 #include <hal_spi_m_dma.h>
+
+#include <hal_i2c_m_sync.h>
 #include <tc_lite.h>
 #include <tc_lite.h>
 
 extern struct i2c_m_sync_desc I2C_0;
 
 extern struct spi_m_dma_descriptor SPI_0;
+
+extern struct i2c_m_sync_desc I2C_1;
 
 void I2C_0_CLOCK_init(void);
 void I2C_0_init(void);
@@ -38,6 +42,10 @@ void I2C_0_PORT_init(void);
 void SPI_0_PORT_init(void);
 void SPI_0_CLOCK_init(void);
 void SPI_0_init(void);
+
+void I2C_1_CLOCK_init(void);
+void I2C_1_init(void);
+void I2C_1_PORT_init(void);
 
 void TIMER_1_CLOCK_init(void);
 

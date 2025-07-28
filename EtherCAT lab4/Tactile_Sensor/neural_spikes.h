@@ -36,6 +36,7 @@ void calc_current_normal_force(struct fneuron_t *neuron, float force_z);
 void calc_current_shear_force(struct fneuron_t *neuron,float force_r);
 void step_f(struct fneuron_t *neuron, float synapse, float ms);
 void neuron_init_row(struct neuron_pair *neuron_pair_top, struct neuron_pair *neuron_pair_middle, struct neuron_pair *neuron_pair_bottom);
+void neuron_init_array(struct neuron_pair *neuron_pair_1, struct neuron_pair *neuron_pair_2, struct neuron_pair *neuron_pair_3, struct neuron_pair *neuron_pair_4, struct neuron_pair *neuron_pair_5, struct neuron_pair *neuron_pair_6, struct neuron_pair *neuron_pair_7, struct neuron_pair *neuron_pair_8, struct neuron_pair *neuron_pair_9);
 //void neuron_init(struct fneuron_t *neuron1_normal, struct fneuron_t *neuron1_shear, struct fneuron_t *neuron2_normal, struct fneuron_t *neuron2_shear, struct fneuron_t *neuron3_normal, struct fneuron_t *neuron3_shear);
 void neuron_calc_row(struct sensorRow_Values *sensor_row, struct neuron_pair *neuron_pair_top, struct neuron_pair *neuron_pair_middle,struct neuron_pair *neuron_pair_bottom);
 //void neuron_calc(struct sensorRow_Values *sensor_row, struct fneuron_t *neuron1_normal, struct fneuron_t *neuron1_shear, struct fneuron_t *neuron2_normal, struct fneuron_t *neuron2_shear, struct fneuron_t *neuron3_normal, struct fneuron_t *neuron3_shear);

@@ -39,7 +39,7 @@
  *
  * \acme_license_stop
  *
- * Project: SensorArrayReadoutEtherCAT
+ * Project: AtmelStartFiles
  * Target:  ATSAME54P20A 
  *
  **/

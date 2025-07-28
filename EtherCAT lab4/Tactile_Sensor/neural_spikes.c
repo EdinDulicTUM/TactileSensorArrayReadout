@@ -113,6 +113,13 @@ void neuron_init_row(struct neuron_pair *neuron_pair_top, struct neuron_pair *ne
 	//repeatition = (uint8_t) (neuron_middle_normal.timestep_force/neuron_middle_normal.timestep_neuron);
 }
 
+void neuron_init_array(struct neuron_pair *neuron_pair_1, struct neuron_pair *neuron_pair_2, struct neuron_pair *neuron_pair_3, struct neuron_pair *neuron_pair_4, struct neuron_pair *neuron_pair_5, struct neuron_pair *neuron_pair_6, struct neuron_pair *neuron_pair_7, struct neuron_pair *neuron_pair_8, struct neuron_pair *neuron_pair_9)
+{
+	neuron_init_row(neuron_pair_1, neuron_pair_2, neuron_pair_3);
+	neuron_init_row(neuron_pair_4, neuron_pair_5, neuron_pair_6);
+	neuron_init_row(neuron_pair_7, neuron_pair_8, neuron_pair_9);
+}
+
  void neuron_calc_row(struct sensorRow_Values *sensor_row, struct neuron_pair *neuron_pair_top, struct neuron_pair *neuron_pair_middle, struct neuron_pair *neuron_pair_bottom){
 	 
 	 uint8_t repeatition = (uint8_t) (neuron_pair_top->neuron_normal.timestep_force/neuron_pair_top->neuron_normal.timestep_neuron);

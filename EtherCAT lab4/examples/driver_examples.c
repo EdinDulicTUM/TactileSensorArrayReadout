@@ -45,3 +45,13 @@ void SPI_0_example(void)
 	spi_m_dma_enable(&SPI_0);
 	io_write(io, example_SPI_0, 12);
 }
+
+void I2C_1_example(void)
+{
+	struct io_descriptor *I2C_1_io;
+
+	i2c_m_sync_get_io_descriptor(&I2C_1, &I2C_1_io);
+	i2c_m_sync_enable(&I2C_1);
+	i2c_m_sync_set_slaveaddr(&I2C_1, 0x12, I2C_M_SEVEN);
+	io_write(I2C_1_io, (uint8_t *)"Hello World!", 12);
+}
