@@ -121,6 +121,7 @@ number_of_arrays    0x1               main.o
 spi_clear_rd_fifo_dma_descriptor
                     0x10              EtherCAT/ethercat_e54.o
 I2C_1               0x20              driver_init.o
+data_sent           0x1               main.o
 spi_rx_abort_fifo_dma_descriptor
                     0x10              EtherCAT/ethercat_e54.o
 ram_buffer          0x80              EtherCAT/ethercat_e54.o
@@ -11437,25 +11438,25 @@ Discarded input sections
  .text          0x00000000        0x0 Melexis/MLX90393_microchip.o
  .data          0x00000000        0x0 Melexis/MLX90393_microchip.o
  .bss           0x00000000        0x0 Melexis/MLX90393_microchip.o
- .text.nop      0x00000000       0x10 Melexis/MLX90393_microchip.o
+ .text.nop      0x00000000       0x14 Melexis/MLX90393_microchip.o
  .text.memoryRecall
-                0x00000000       0x20 Melexis/MLX90393_microchip.o
+                0x00000000       0x24 Melexis/MLX90393_microchip.o
  .text.memoryStore
-                0x00000000       0x10 Melexis/MLX90393_microchip.o
+                0x00000000       0x14 Melexis/MLX90393_microchip.o
  .text.convDelayMillis
                 0x00000000       0x44 Melexis/MLX90393_microchip.o
  .text.startBurst
-                0x00000000       0x28 Melexis/MLX90393_microchip.o
+                0x00000000       0x30 Melexis/MLX90393_microchip.o
  .text.startWakeOnChange
-                0x00000000       0x28 Melexis/MLX90393_microchip.o
+                0x00000000       0x30 Melexis/MLX90393_microchip.o
  .text.getGainSel
-                0x00000000       0x24 Melexis/MLX90393_microchip.o
+                0x00000000       0x28 Melexis/MLX90393_microchip.o
  .text.setHallConf
-                0x00000000       0x60 Melexis/MLX90393_microchip.o
+                0x00000000       0x68 Melexis/MLX90393_microchip.o
  .text.getHallConf
-                0x00000000       0x24 Melexis/MLX90393_microchip.o
+                0x00000000       0x28 Melexis/MLX90393_microchip.o
  .text.getResolution
-                0x00000000       0x24 Melexis/MLX90393_microchip.o
+                0x00000000       0x28 Melexis/MLX90393_microchip.o
  .text.getOverSampling
                 0x00000000       0x28 Melexis/MLX90393_microchip.o
  .text.getDigitalFiltering
@@ -11463,29 +11464,29 @@ Discarded input sections
  .text.getTemperatureCompensation
                 0x00000000       0x28 Melexis/MLX90393_microchip.o
  .text.setTemperatureOverSampling
-                0x00000000       0x5c Melexis/MLX90393_microchip.o
+                0x00000000       0x6c Melexis/MLX90393_microchip.o
  .text.getTemperatureOverSampling
                 0x00000000       0x28 Melexis/MLX90393_microchip.o
  .text.setBurstSel
-                0x00000000       0x5c Melexis/MLX90393_microchip.o
+                0x00000000       0x6c Melexis/MLX90393_microchip.o
  .text.getBurstSel
                 0x00000000       0x28 Melexis/MLX90393_microchip.o
  .text.getExtTrig
                 0x00000000       0x28 Melexis/MLX90393_microchip.o
  .text.setTrigIntSel
-                0x00000000       0x58 Melexis/MLX90393_microchip.o
+                0x00000000       0x60 Melexis/MLX90393_microchip.o
  .text.getTrigIntSel
                 0x00000000       0x28 Melexis/MLX90393_microchip.o
  .text.setOffsets
-                0x00000000       0x54 Melexis/MLX90393_microchip.o
+                0x00000000       0x60 Melexis/MLX90393_microchip.o
  .text.setWOXYThreshold
-                0x00000000       0x1c Melexis/MLX90393_microchip.o
+                0x00000000       0x20 Melexis/MLX90393_microchip.o
  .text.setWOZThreshold
-                0x00000000       0x1c Melexis/MLX90393_microchip.o
+                0x00000000       0x20 Melexis/MLX90393_microchip.o
  .text.setWOTThreshold
-                0x00000000       0x1c Melexis/MLX90393_microchip.o
+                0x00000000       0x20 Melexis/MLX90393_microchip.o
  .text.readData
-                0x00000000       0x5c Melexis/MLX90393_microchip.o
+                0x00000000       0x64 Melexis/MLX90393_microchip.o
  .debug_macro   0x00000000      0x8b0 Melexis/MLX90393_microchip.o
  .debug_macro   0x00000000       0x22 Melexis/MLX90393_microchip.o
  .debug_macro   0x00000000       0x87 Melexis/MLX90393_microchip.o
@@ -12793,7 +12794,7 @@ LOAD c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin
 LOAD c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/crtn.o
                 0x00010000                STACK_SIZE = DEFINED (STACK_SIZE)?STACK_SIZE:DEFINED (__stack_size__)?__stack_size__:0x10000
 
-.text           0x00000000     0x6adc
+.text           0x00000000     0x6be4
                 0x00000000                . = ALIGN (0x4)
                 0x00000000                _sfixed = .
  *(.vectors .vectors.*)
@@ -13176,296 +13177,295 @@ LOAD c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin
  .text.SensorRowUpdate
                 0x00001f08      0x334 main.o
                 0x00001f08                SensorRowUpdate
- .text.main     0x0000223c      0x2e4 main.o
+ .text.main     0x0000223c      0x340 main.o
                 0x0000223c                main
  .text.TC3_Handler
-                0x00002520       0x44 main.o
-                0x00002520                TC3_Handler
+                0x0000257c       0x50 main.o
+                0x0000257c                TC3_Handler
  .text.select_prefix
-                0x00002564       0x28 Melexis/MLX90393_microchip.o
-                0x00002564                select_prefix
+                0x000025cc       0x28 Melexis/MLX90393_microchip.o
+                0x000025cc                select_prefix
  .text.i2c_m_sync_cmd_write_easy
-                0x0000258c       0x48 Melexis/MLX90393_microchip.o
-                0x0000258c                i2c_m_sync_cmd_write_easy
+                0x000025f4       0x48 Melexis/MLX90393_microchip.o
+                0x000025f4                i2c_m_sync_cmd_write_easy
  .text.sendCommand
-                0x000025d4       0x3c Melexis/MLX90393_microchip.o
-                0x000025d4                sendCommand
+                0x0000263c       0x3c Melexis/MLX90393_microchip.o
+                0x0000263c                sendCommand
  .text.i2c_m_sync_reg_read_easy
-                0x00002610       0x48 Melexis/MLX90393_microchip.o
-                0x00002610                i2c_m_sync_reg_read_easy
+                0x00002678       0x48 Melexis/MLX90393_microchip.o
+                0x00002678                i2c_m_sync_reg_read_easy
  .text.i2c_m_sync_reg_write_easy
-                0x00002658       0x4c Melexis/MLX90393_microchip.o
-                0x00002658                i2c_m_sync_reg_write_easy
+                0x000026c0       0x4c Melexis/MLX90393_microchip.o
+                0x000026c0                i2c_m_sync_reg_write_easy
  .text.cache_invalidate
-                0x000026a4        0x8 Melexis/MLX90393_microchip.o
-                0x000026a4                cache_invalidate
+                0x0000270c        0x8 Melexis/MLX90393_microchip.o
+                0x0000270c                cache_invalidate
  .text.initialize
-                0x000026ac       0x6c Melexis/MLX90393_microchip.o
-                0x000026ac                initialize
+                0x00002714       0x6c Melexis/MLX90393_microchip.o
+                0x00002714                initialize
  .text.cache_invalidate_address
-                0x00002718       0x16 Melexis/MLX90393_microchip.o
-                0x00002718                cache_invalidate_address
+                0x00002780       0x16 Melexis/MLX90393_microchip.o
+                0x00002780                cache_invalidate_address
  .text.cache_set
-                0x0000272e       0x20 Melexis/MLX90393_microchip.o
-                0x0000272e                cache_set
- *fill*         0x0000274e        0x2 
+                0x00002796       0x20 Melexis/MLX90393_microchip.o
+                0x00002796                cache_set
+ *fill*         0x000027b6        0x2 
  .text.readRegister
-                0x00002750       0x64 Melexis/MLX90393_microchip.o
-                0x00002750                readRegister
- .text.reset    0x000027b4       0x2c Melexis/MLX90393_microchip.o
-                0x000027b4                reset
+                0x000027b8       0x60 Melexis/MLX90393_microchip.o
+                0x000027b8                readRegister
+ .text.reset    0x00002818       0x30 Melexis/MLX90393_microchip.o
+                0x00002818                reset
  .text.exit_command
-                0x000027e0       0x10 Melexis/MLX90393_microchip.o
-                0x000027e0                exit_command
+                0x00002848       0x14 Melexis/MLX90393_microchip.o
+                0x00002848                exit_command
  .text.readMeasurement
-                0x000027f0      0x11c Melexis/MLX90393_microchip.o
-                0x000027f0                readMeasurement
+                0x0000285c      0x118 Melexis/MLX90393_microchip.o
+                0x0000285c                readMeasurement
  .text.convertRaw
-                0x0000290c      0x3ec Melexis/MLX90393_microchip.o
-                0x0000290c                convertRaw
+                0x00002974      0x3ec Melexis/MLX90393_microchip.o
+                0x00002974                convertRaw
  .text.convDelayMicro
-                0x00002cf8       0x44 Melexis/MLX90393_microchip.o
-                0x00002cf8                convDelayMicro
- .text.isOK     0x00002d3c        0xc Melexis/MLX90393_microchip.o
-                0x00002d3c                isOK
+                0x00002d60       0x44 Melexis/MLX90393_microchip.o
+                0x00002d60                convDelayMicro
+ .text.isOK     0x00002da4        0xc Melexis/MLX90393_microchip.o
+                0x00002da4                isOK
  .text.writeRegister
-                0x00002d48       0x70 Melexis/MLX90393_microchip.o
-                0x00002d48                writeRegister
+                0x00002db0       0x6c Melexis/MLX90393_microchip.o
+                0x00002db0                writeRegister
  .text.hasError
-                0x00002db8        0x6 Melexis/MLX90393_microchip.o
-                0x00002db8                hasError
- *fill*         0x00002dbe        0x2 
+                0x00002e1c        0x6 Melexis/MLX90393_microchip.o
+                0x00002e1c                hasError
+ *fill*         0x00002e22        0x2 
  .text.cache_fill
-                0x00002dc0       0x58 Melexis/MLX90393_microchip.o
-                0x00002dc0                cache_fill
+                0x00002e24       0x60 Melexis/MLX90393_microchip.o
+                0x00002e24                cache_fill
  .text.startMeasurement
-                0x00002e18       0x28 Melexis/MLX90393_microchip.o
-                0x00002e18                startMeasurement
+                0x00002e84       0x30 Melexis/MLX90393_microchip.o
+                0x00002e84                startMeasurement
  .text.checkStatus
-                0x00002e40        0xe Melexis/MLX90393_microchip.o
-                0x00002e40                checkStatus
- *fill*         0x00002e4e        0x2 
+                0x00002eb4        0xe Melexis/MLX90393_microchip.o
+                0x00002eb4                checkStatus
+ *fill*         0x00002ec2        0x2 
  .text.setGainSel
-                0x00002e50       0x64 Melexis/MLX90393_microchip.o
-                0x00002e50                setGainSel
+                0x00002ec4       0x6c Melexis/MLX90393_microchip.o
+                0x00002ec4                setGainSel
  .text.setResolution
-                0x00002eb4       0x6c Melexis/MLX90393_microchip.o
-                0x00002eb4                setResolution
+                0x00002f30       0x70 Melexis/MLX90393_microchip.o
+                0x00002f30                setResolution
  .text.setOverSampling
-                0x00002f20       0x5c Melexis/MLX90393_microchip.o
-                0x00002f20                setOverSampling
+                0x00002fa0       0x68 Melexis/MLX90393_microchip.o
+                0x00002fa0                setOverSampling
  .text.setDigitalFiltering
-                0x00002f7c       0x5c Melexis/MLX90393_microchip.o
-                0x00002f7c                setDigitalFiltering
+                0x00003008       0x6c Melexis/MLX90393_microchip.o
+                0x00003008                setDigitalFiltering
  .text.setTemperatureCompensation
-                0x00002fd8       0x5c Melexis/MLX90393_microchip.o
-                0x00002fd8                setTemperatureCompensation
- .text.begin    0x00003034       0xc4 Melexis/MLX90393_microchip.o
-                0x00003034                begin
+                0x00003074       0x6c Melexis/MLX90393_microchip.o
+                0x00003074                setTemperatureCompensation
+ .text.begin    0x000030e0       0xd8 Melexis/MLX90393_microchip.o
+                0x000030e0                begin
  .text.setExtTrig
-                0x000030f8       0x60 Melexis/MLX90393_microchip.o
-                0x000030f8                setExtTrig
+                0x000031b8       0x68 Melexis/MLX90393_microchip.o
+                0x000031b8                setExtTrig
  .text.triggerInitialize
-                0x00003158       0x24 Melexis/SensorArray.o
-                0x00003158                triggerInitialize
+                0x00003220       0x28 Melexis/SensorArray.o
+                0x00003220                triggerInitialize
  .text.triggerSensor
-                0x0000317c       0x18 Melexis/SensorArray.o
-                0x0000317c                triggerSensor
+                0x00003248       0x18 Melexis/SensorArray.o
+                0x00003248                triggerSensor
  .text.triggerReadout
-                0x00003194       0x28 Melexis/SensorArray.o
-                0x00003194                triggerReadout
+                0x00003260       0x2c Melexis/SensorArray.o
+                0x00003260                triggerReadout
  .text.triggerReadoutArray
-                0x000031bc       0xac Melexis/SensorArray.o
-                0x000031bc                triggerReadoutArray
+                0x0000328c       0xbc Melexis/SensorArray.o
+                0x0000328c                triggerReadoutArray
  .text.SensorArray_Init
-                0x00003268      0x134 Melexis/SensorArray.o
-                0x00003268                SensorArray_Init
+                0x00003348      0x160 Melexis/SensorArray.o
+                0x00003348                SensorArray_Init
  .text.update_struct_values
-                0x0000339c       0xa8 Melexis/SensorArray.o
-                0x0000339c                update_struct_values
- *fill*         0x00003444        0x4 
+                0x000034a8       0xa8 Melexis/SensorArray.o
+                0x000034a8                update_struct_values
  .text.mag_to_force
-                0x00003448     0x24fc Melexis/SensorArray.o
-                0x00003448                mag_to_force
- .text.RS       0x00005944       0x30 Tactile_Sensor/neural_spikes.o
-                0x00005944                RS
+                0x00003550     0x24fc Melexis/SensorArray.o
+                0x00003550                mag_to_force
+ .text.RS       0x00005a4c       0x30 Tactile_Sensor/neural_spikes.o
+                0x00005a4c                RS
  .text.force_parameters
-                0x00005974       0x28 Tactile_Sensor/neural_spikes.o
-                0x00005974                force_parameters
+                0x00005a7c       0x28 Tactile_Sensor/neural_spikes.o
+                0x00005a7c                force_parameters
  .text.calc_current_normal_force
-                0x0000599c       0x1e Tactile_Sensor/neural_spikes.o
-                0x0000599c                calc_current_normal_force
+                0x00005aa4       0x1e Tactile_Sensor/neural_spikes.o
+                0x00005aa4                calc_current_normal_force
  .text.calc_current_shear_force
-                0x000059ba       0x1e Tactile_Sensor/neural_spikes.o
-                0x000059ba                calc_current_shear_force
- .text.step_f   0x000059d8      0x130 Tactile_Sensor/neural_spikes.o
-                0x000059d8                step_f
+                0x00005ac2       0x1e Tactile_Sensor/neural_spikes.o
+                0x00005ac2                calc_current_shear_force
+ .text.step_f   0x00005ae0      0x130 Tactile_Sensor/neural_spikes.o
+                0x00005ae0                step_f
  .text.neuron_init_row
-                0x00005b08       0x50 Tactile_Sensor/neural_spikes.o
-                0x00005b08                neuron_init_row
+                0x00005c10       0x50 Tactile_Sensor/neural_spikes.o
+                0x00005c10                neuron_init_row
  .text.neuron_init_array
-                0x00005b58       0x20 Tactile_Sensor/neural_spikes.o
-                0x00005b58                neuron_init_array
+                0x00005c60       0x20 Tactile_Sensor/neural_spikes.o
+                0x00005c60                neuron_init_array
  .text.neuron_calc_row
-                0x00005b78       0xb8 Tactile_Sensor/neural_spikes.o
-                0x00005b78                neuron_calc_row
+                0x00005c80       0xb8 Tactile_Sensor/neural_spikes.o
+                0x00005c80                neuron_calc_row
  .text.update_struct_values_neural
-                0x00005c30       0x20 Tactile_Sensor/neural_spikes.o
-                0x00005c30                update_struct_values_neural
- .text.sqrt     0x00005c50       0xbc c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m\libm.a(lib_a-w_sqrt.o)
-                0x00005c50                sqrt
+                0x00005d38       0x20 Tactile_Sensor/neural_spikes.o
+                0x00005d38                update_struct_values_neural
+ .text.sqrt     0x00005d58       0xbc c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m\libm.a(lib_a-w_sqrt.o)
+                0x00005d58                sqrt
  .text.__ieee754_sqrt
-                0x00005d0c      0x178 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m\libm.a(lib_a-e_sqrt.o)
-                0x00005d0c                __ieee754_sqrt
- .text.matherr  0x00005e84        0x4 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m\libm.a(lib_a-s_matherr.o)
-                0x00005e84                matherr
- .text          0x00005e88      0x370 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m\libgcc.a(_arm_addsubdf3.o)
-                0x00005e88                __aeabi_drsub
-                0x00005e90                __aeabi_dsub
-                0x00005e90                __subdf3
-                0x00005e94                __aeabi_dadd
-                0x00005e94                __adddf3
-                0x0000610c                __floatunsidf
-                0x0000610c                __aeabi_ui2d
-                0x0000612c                __floatsidf
-                0x0000612c                __aeabi_i2d
-                0x00006150                __aeabi_f2d
-                0x00006150                __extendsfdf2
-                0x0000618c                __floatundidf
-                0x0000618c                __aeabi_ul2d
-                0x0000619c                __floatdidf
-                0x0000619c                __aeabi_l2d
- .text          0x000061f8      0x424 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m\libgcc.a(_arm_muldivdf3.o)
-                0x000061f8                __aeabi_dmul
-                0x000061f8                __muldf3
-                0x0000644c                __divdf3
-                0x0000644c                __aeabi_ddiv
- .text          0x0000661c      0x110 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m\libgcc.a(_arm_cmpdf2.o)
-                0x0000661c                __gtdf2
-                0x0000661c                __gedf2
-                0x00006624                __ltdf2
-                0x00006624                __ledf2
-                0x0000662c                __nedf2
-                0x0000662c                __eqdf2
-                0x0000662c                __cmpdf2
-                0x000066a8                __aeabi_cdrcmple
-                0x000066b8                __aeabi_cdcmpeq
-                0x000066b8                __aeabi_cdcmple
-                0x000066c8                __aeabi_dcmpeq
-                0x000066dc                __aeabi_dcmplt
-                0x000066f0                __aeabi_dcmple
-                0x00006704                __aeabi_dcmpge
-                0x00006718                __aeabi_dcmpgt
- .text          0x0000672c       0x2c c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m\libgcc.a(_arm_unorddf2.o)
-                0x0000672c                __unorddf2
-                0x0000672c                __aeabi_dcmpun
- .text          0x00006758       0xa0 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m\libgcc.a(_arm_truncdfsf2.o)
-                0x00006758                __truncdfsf2
-                0x00006758                __aeabi_d2f
- .text.__errno  0x000067f8        0xc c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m\libc_nano.a(lib_a-errno.o)
-                0x000067f8                __errno
+                0x00005e14      0x178 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m\libm.a(lib_a-e_sqrt.o)
+                0x00005e14                __ieee754_sqrt
+ .text.matherr  0x00005f8c        0x4 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m\libm.a(lib_a-s_matherr.o)
+                0x00005f8c                matherr
+ .text          0x00005f90      0x370 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m\libgcc.a(_arm_addsubdf3.o)
+                0x00005f90                __aeabi_drsub
+                0x00005f98                __aeabi_dsub
+                0x00005f98                __subdf3
+                0x00005f9c                __aeabi_dadd
+                0x00005f9c                __adddf3
+                0x00006214                __floatunsidf
+                0x00006214                __aeabi_ui2d
+                0x00006234                __floatsidf
+                0x00006234                __aeabi_i2d
+                0x00006258                __aeabi_f2d
+                0x00006258                __extendsfdf2
+                0x00006294                __floatundidf
+                0x00006294                __aeabi_ul2d
+                0x000062a4                __floatdidf
+                0x000062a4                __aeabi_l2d
+ .text          0x00006300      0x424 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m\libgcc.a(_arm_muldivdf3.o)
+                0x00006300                __aeabi_dmul
+                0x00006300                __muldf3
+                0x00006554                __divdf3
+                0x00006554                __aeabi_ddiv
+ .text          0x00006724      0x110 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m\libgcc.a(_arm_cmpdf2.o)
+                0x00006724                __gtdf2
+                0x00006724                __gedf2
+                0x0000672c                __ltdf2
+                0x0000672c                __ledf2
+                0x00006734                __nedf2
+                0x00006734                __eqdf2
+                0x00006734                __cmpdf2
+                0x000067b0                __aeabi_cdrcmple
+                0x000067c0                __aeabi_cdcmpeq
+                0x000067c0                __aeabi_cdcmple
+                0x000067d0                __aeabi_dcmpeq
+                0x000067e4                __aeabi_dcmplt
+                0x000067f8                __aeabi_dcmple
+                0x0000680c                __aeabi_dcmpge
+                0x00006820                __aeabi_dcmpgt
+ .text          0x00006834       0x2c c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m\libgcc.a(_arm_unorddf2.o)
+                0x00006834                __unorddf2
+                0x00006834                __aeabi_dcmpun
+ .text          0x00006860       0xa0 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m\libgcc.a(_arm_truncdfsf2.o)
+                0x00006860                __truncdfsf2
+                0x00006860                __aeabi_d2f
+ .text.__errno  0x00006900        0xc c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m\libc_nano.a(lib_a-errno.o)
+                0x00006900                __errno
  .text.__libc_init_array
-                0x00006804       0x48 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m\libc_nano.a(lib_a-init.o)
-                0x00006804                __libc_init_array
+                0x0000690c       0x48 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m\libc_nano.a(lib_a-init.o)
+                0x0000690c                __libc_init_array
  *(.glue_7t)
- .glue_7t       0x0000684c        0x0 linker stubs
+ .glue_7t       0x00006954        0x0 linker stubs
  *(.glue_7)
- .glue_7        0x0000684c        0x0 linker stubs
+ .glue_7        0x00006954        0x0 linker stubs
  *(.rodata .rodata* .gnu.linkonce.r.*)
- .rodata        0x0000684c       0x14 EtherCAT/ethercat_e54.o
+ .rodata        0x00006954       0x14 EtherCAT/ethercat_e54.o
  .rodata.str1.4
-                0x00006860       0x1c hal/src/hal_i2c_m_sync.o
+                0x00006968       0x1c hal/src/hal_i2c_m_sync.o
  .rodata.str1.4
-                0x0000687c       0x14 hal/src/hal_io.o
+                0x00006984       0x14 hal/src/hal_io.o
  .rodata.str1.4
-                0x00006890       0x1b hal/src/hal_spi_m_dma.o
- *fill*         0x000068ab        0x1 
- .rodata        0x000068ac      0x100 hpl/dmac/hpl_dmac.o
- .rodata        0x000069ac       0x89 hpl/sercom/hpl_sercom.o
- *fill*         0x00006a35        0x3 
+                0x00006998       0x1b hal/src/hal_spi_m_dma.o
+ *fill*         0x000069b3        0x1 
+ .rodata        0x000069b4      0x100 hpl/dmac/hpl_dmac.o
+ .rodata        0x00006ab4       0x89 hpl/sercom/hpl_sercom.o
+ *fill*         0x00006b3d        0x3 
  .rodata.str1.4
-                0x00006a38       0x1b hpl/sercom/hpl_sercom.o
- *fill*         0x00006a53        0x1 
+                0x00006b40       0x1b hpl/sercom/hpl_sercom.o
+ *fill*         0x00006b5b        0x1 
  .rodata.sqrt.str1.4
-                0x00006a54        0x8 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m\libm.a(lib_a-w_sqrt.o)
+                0x00006b5c        0x8 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m\libm.a(lib_a-w_sqrt.o)
                                   0x5 (size before relaxing)
  .rodata.__sf_fake_stderr
-                0x00006a5c       0x20 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m\libc_nano.a(lib_a-findfp.o)
-                0x00006a5c                __sf_fake_stderr
+                0x00006b64       0x20 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m\libc_nano.a(lib_a-findfp.o)
+                0x00006b64                __sf_fake_stderr
  .rodata.__sf_fake_stdin
-                0x00006a7c       0x20 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m\libc_nano.a(lib_a-findfp.o)
-                0x00006a7c                __sf_fake_stdin
+                0x00006b84       0x20 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m\libc_nano.a(lib_a-findfp.o)
+                0x00006b84                __sf_fake_stdin
  .rodata.__sf_fake_stdout
-                0x00006a9c       0x20 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m\libc_nano.a(lib_a-findfp.o)
-                0x00006a9c                __sf_fake_stdout
+                0x00006ba4       0x20 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m\libc_nano.a(lib_a-findfp.o)
+                0x00006ba4                __sf_fake_stdout
  *(.ARM.extab* .gnu.linkonce.armextab.*)
-                0x00006abc                . = ALIGN (0x4)
+                0x00006bc4                . = ALIGN (0x4)
  *(.init)
- .init          0x00006abc        0x4 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/crti.o
-                0x00006abc                _init
- .init          0x00006ac0        0x8 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/crtn.o
-                0x00006ac8                . = ALIGN (0x4)
-                0x00006ac8                __preinit_array_start = .
+ .init          0x00006bc4        0x4 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/crti.o
+                0x00006bc4                _init
+ .init          0x00006bc8        0x8 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/crtn.o
+                0x00006bd0                . = ALIGN (0x4)
+                0x00006bd0                __preinit_array_start = .
  *(.preinit_array)
-                0x00006ac8                __preinit_array_end = .
-                0x00006ac8                . = ALIGN (0x4)
-                0x00006ac8                __init_array_start = .
+                0x00006bd0                __preinit_array_end = .
+                0x00006bd0                . = ALIGN (0x4)
+                0x00006bd0                __init_array_start = .
  *(SORT(.init_array.*))
  *(.init_array)
- .init_array    0x00006ac8        0x4 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/crtbegin.o
-                0x00006acc                __init_array_end = .
-                0x00006acc                . = ALIGN (0x4)
+ .init_array    0x00006bd0        0x4 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/crtbegin.o
+                0x00006bd4                __init_array_end = .
+                0x00006bd4                . = ALIGN (0x4)
  *crtbegin.o(.ctors)
  *(EXCLUDE_FILE(*crtend.o) .ctors)
  *(SORT(.ctors.*))
  *crtend.o(.ctors)
-                0x00006acc                . = ALIGN (0x4)
+                0x00006bd4                . = ALIGN (0x4)
  *(.fini)
- .fini          0x00006acc        0x4 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/crti.o
-                0x00006acc                _fini
- .fini          0x00006ad0        0x8 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/crtn.o
-                0x00006ad8                . = ALIGN (0x4)
-                0x00006ad8                __fini_array_start = .
+ .fini          0x00006bd4        0x4 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/crti.o
+                0x00006bd4                _fini
+ .fini          0x00006bd8        0x8 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/crtn.o
+                0x00006be0                . = ALIGN (0x4)
+                0x00006be0                __fini_array_start = .
  *(.fini_array)
- .fini_array    0x00006ad8        0x4 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/crtbegin.o
+ .fini_array    0x00006be0        0x4 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/crtbegin.o
  *(SORT(.fini_array.*))
-                0x00006adc                __fini_array_end = .
+                0x00006be4                __fini_array_end = .
  *crtbegin.o(.dtors)
  *(EXCLUDE_FILE(*crtend.o) .dtors)
  *(SORT(.dtors.*))
  *crtend.o(.dtors)
-                0x00006adc                . = ALIGN (0x4)
-                0x00006adc                _efixed = .
+                0x00006be4                . = ALIGN (0x4)
+                0x00006be4                _efixed = .
                 [!provide]                PROVIDE (__exidx_start, .)
 
-.vfp11_veneer   0x00006adc        0x0
- .vfp11_veneer  0x00006adc        0x0 linker stubs
+.vfp11_veneer   0x00006be4        0x0
+ .vfp11_veneer  0x00006be4        0x0 linker stubs
 
-.v4_bx          0x00006adc        0x0
- .v4_bx         0x00006adc        0x0 linker stubs
+.v4_bx          0x00006be4        0x0
+ .v4_bx         0x00006be4        0x0 linker stubs
 
-.iplt           0x00006adc        0x0
- .iplt          0x00006adc        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/crtbegin.o
+.iplt           0x00006be4        0x0
+ .iplt          0x00006be4        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/crtbegin.o
 
-.eh_frame       0x00006adc        0x0
- .eh_frame      0x00006adc        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/crtbegin.o
+.eh_frame       0x00006be4        0x0
+ .eh_frame      0x00006be4        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/crtbegin.o
 
-.rel.dyn        0x00006adc        0x0
- .rel.iplt      0x00006adc        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/crtbegin.o
+.rel.dyn        0x00006be4        0x0
+ .rel.iplt      0x00006be4        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/crtbegin.o
 
-.jcr            0x00006adc        0x0
- .jcr           0x00006adc        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/crtbegin.o
+.jcr            0x00006be4        0x0
+ .jcr           0x00006be4        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/crtbegin.o
 
-.igot.plt       0x00006adc        0x0
- .igot.plt      0x00006adc        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/crtbegin.o
+.igot.plt       0x00006be4        0x0
+ .igot.plt      0x00006be4        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/crtbegin.o
 
 .ARM.exidx
  *(.ARM.exidx* .gnu.linkonce.armexidx.*)
                 [!provide]                PROVIDE (__exidx_end, .)
-                0x00006adc                . = ALIGN (0x4)
-                0x00006adc                _etext = .
+                0x00006be4                . = ALIGN (0x4)
+                0x00006be4                _etext = .
 
-.relocate       0x20000000      0x154 load address 0x00006adc
+.relocate       0x20000000      0x154 load address 0x00006be4
                 0x20000000                . = ALIGN (0x4)
                 0x20000000                _srelocate = .
  *(.ramfunc .ramfunc.*)
@@ -13501,7 +13501,7 @@ LOAD c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin
                 0x04000000                . = ALIGN (0x8)
                 0x04000000                _eqspi = .
 
-.bss            0x20000160     0x1c14 load address 0x00006c40
+.bss            0x20000160     0x1c14 load address 0x00006d50
                 0x20000160                . = ALIGN (0x4)
                 0x20000160                _sbss = .
                 0x20000160                _szero = .
@@ -13550,6 +13550,7 @@ LOAD c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin
                 0x20001389                data_readout
                 0x2000138c                bmx_io_2
                 0x20001390                number_of_arrays
+                0x20001391                data_sent
                 0x20001392                wait_time
                 0x20001394                triggered
                 0x20001395                selected_output_mode
@@ -13560,7 +13561,7 @@ LOAD c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin
                 0x20001d74                _ebss = .
                 0x20001d74                _ezero = .
 
-.stack          0x20001d74    0x10004 load address 0x00008854
+.stack          0x20001d74    0x10004 load address 0x00008964
                 0x20001d78                . = ALIGN (0x8)
  *fill*         0x20001d74        0x4 
                 0x20001d78                _sstack = .
@@ -13679,7 +13680,7 @@ OUTPUT(SensorArrayReadoutEtherCAT.elf elf32-littlearm)
  .comment       0x00000059       0x5a Melexis/SensorArray.o
  .comment       0x00000059       0x5a Tactile_Sensor/neural_spikes.o
 
-.debug_info     0x00000000    0x3172c
+.debug_info     0x00000000    0x31cd4
  .debug_info    0x00000000      0x46c atmel_start.o
  .debug_info    0x0000046c      0xd7d Device_Startup/startup_same54.o
  .debug_info    0x000011e9     0x5305 driver_init.o
@@ -13699,10 +13700,10 @@ OUTPUT(SensorArrayReadoutEtherCAT.elf elf32-littlearm)
  .debug_info    0x00016ba3      0xc15 hpl/ramecc/hpl_ramecc.o
  .debug_info    0x000177b8     0xcbe3 hpl/sercom/hpl_sercom.o
  .debug_info    0x0002439b     0x1962 hpl/tc/tc_lite.o
- .debug_info    0x00025cfd     0x3e89 main.o
- .debug_info    0x00029b86     0x2bfb Melexis/MLX90393_microchip.o
- .debug_info    0x0002c781     0x3937 Melexis/SensorArray.o
- .debug_info    0x000300b8     0x1674 Tactile_Sensor/neural_spikes.o
+ .debug_info    0x00025cfd     0x3f0d main.o
+ .debug_info    0x00029c0a     0x3010 Melexis/MLX90393_microchip.o
+ .debug_info    0x0002cc1a     0x3a46 Melexis/SensorArray.o
+ .debug_info    0x00030660     0x1674 Tactile_Sensor/neural_spikes.o
 
 .debug_abbrev   0x00000000     0x37bf
  .debug_abbrev  0x00000000      0x104 atmel_start.o
@@ -13729,7 +13730,7 @@ OUTPUT(SensorArrayReadoutEtherCAT.elf elf32-littlearm)
  .debug_abbrev  0x00003183      0x3a1 Melexis/SensorArray.o
  .debug_abbrev  0x00003524      0x29b Tactile_Sensor/neural_spikes.o
 
-.debug_loc      0x00000000    0x10748
+.debug_loc      0x00000000    0x10f61
  .debug_loc     0x00000000       0x20 atmel_start.o
  .debug_loc     0x00000020       0x78 Device_Startup/startup_same54.o
  .debug_loc     0x00000098      0xe80 driver_init.o
@@ -13749,9 +13750,9 @@ OUTPUT(SensorArrayReadoutEtherCAT.elf elf32-littlearm)
  .debug_loc     0x00003d7c     0x8a62 hpl/sercom/hpl_sercom.o
  .debug_loc     0x0000c7de      0x5be hpl/tc/tc_lite.o
  .debug_loc     0x0000cd9c      0x1e3 main.o
- .debug_loc     0x0000cf7f     0x2a4f Melexis/MLX90393_microchip.o
- .debug_loc     0x0000f9ce      0x88c Melexis/SensorArray.o
- .debug_loc     0x0001025a      0x4ee Tactile_Sensor/neural_spikes.o
+ .debug_loc     0x0000cf7f     0x31ba Melexis/MLX90393_microchip.o
+ .debug_loc     0x00010139      0x93a Melexis/SensorArray.o
+ .debug_loc     0x00010a73      0x4ee Tactile_Sensor/neural_spikes.o
 
 .debug_aranges  0x00000000      0xd40
  .debug_aranges
@@ -14033,7 +14034,7 @@ OUTPUT(SensorArrayReadoutEtherCAT.elf elf32-littlearm)
  .debug_macro   0x00034269      0x950 Tactile_Sensor/neural_spikes.o
  .debug_macro   0x00034bb9       0xd9 Tactile_Sensor/neural_spikes.o
 
-.debug_line     0x00000000    0x156ff
+.debug_line     0x00000000    0x15716
  .debug_line    0x00000000      0xd55 atmel_start.o
  .debug_line    0x00000d55      0x8a0 Device_Startup/startup_same54.o
  .debug_line    0x000015f5      0xf1d driver_init.o
@@ -14053,12 +14054,12 @@ OUTPUT(SensorArrayReadoutEtherCAT.elf elf32-littlearm)
  .debug_line    0x0000cbf7      0xc84 hpl/ramecc/hpl_ramecc.o
  .debug_line    0x0000d87b     0x2f77 hpl/sercom/hpl_sercom.o
  .debug_line    0x000107f2      0xc8a hpl/tc/tc_lite.o
- .debug_line    0x0001147c      0xfee main.o
- .debug_line    0x0001246a     0x12b3 Melexis/MLX90393_microchip.o
- .debug_line    0x0001371d     0x1024 Melexis/SensorArray.o
- .debug_line    0x00014741      0xfbe Tactile_Sensor/neural_spikes.o
+ .debug_line    0x0001147c     0x1001 main.o
+ .debug_line    0x0001247d     0x12b7 Melexis/MLX90393_microchip.o
+ .debug_line    0x00013734     0x1024 Melexis/SensorArray.o
+ .debug_line    0x00014758      0xfbe Tactile_Sensor/neural_spikes.o
 
-.debug_str      0x00000000   0x12223c
+.debug_str      0x00000000   0x1220f6
  .debug_str     0x00000000   0x107d91 atmel_start.o
                              0x1082e9 (size before relaxing)
  .debug_str     0x00107d91      0xbfb Device_Startup/startup_same54.o
@@ -14093,20 +14094,20 @@ OUTPUT(SensorArrayReadoutEtherCAT.elf elf32-littlearm)
                              0x107e8a (size before relaxing)
  .debug_str     0x0011711e      0x25d hpl/ramecc/hpl_ramecc.o
                              0x107614 (size before relaxing)
- .debug_str     0x0011737b     0x54b4 hpl/sercom/hpl_sercom.o
-                             0x10db50 (size before relaxing)
- .debug_str     0x0011c82f      0x1ac hpl/tc/tc_lite.o
+ .debug_str     0x0011737b     0x5364 hpl/sercom/hpl_sercom.o
+                             0x10da00 (size before relaxing)
+ .debug_str     0x0011c6df      0x1ac hpl/tc/tc_lite.o
                              0x106c35 (size before relaxing)
- .debug_str     0x0011c9db     0x4dbc main.o
-                             0x10e750 (size before relaxing)
- .debug_str     0x00121797      0x7ca Melexis/MLX90393_microchip.o
+ .debug_str     0x0011c88b     0x4dc6 main.o
+                             0x10e763 (size before relaxing)
+ .debug_str     0x00121651      0x7ca Melexis/MLX90393_microchip.o
                              0x108c3e (size before relaxing)
- .debug_str     0x00121f61      0x168 Melexis/SensorArray.o
+ .debug_str     0x00121e1b      0x168 Melexis/SensorArray.o
                              0x10bf8b (size before relaxing)
- .debug_str     0x001220c9      0x173 Tactile_Sensor/neural_spikes.o
+ .debug_str     0x00121f83      0x173 Tactile_Sensor/neural_spikes.o
                              0x10ce50 (size before relaxing)
 
-.debug_frame    0x00000000     0x2820
+.debug_frame    0x00000000     0x286c
  .debug_frame   0x00000000       0x28 atmel_start.o
  .debug_frame   0x00000028       0x38 Device_Startup/startup_same54.o
  .debug_frame   0x00000060       0xf0 driver_init.o
@@ -14127,17 +14128,17 @@ OUTPUT(SensorArrayReadoutEtherCAT.elf elf32-littlearm)
  .debug_frame   0x0000098c     0x1120 hpl/sercom/hpl_sercom.o
  .debug_frame   0x00001aac       0x30 hpl/tc/tc_lite.o
  .debug_frame   0x00001adc       0x60 main.o
- .debug_frame   0x00001b3c      0x664 Melexis/MLX90393_microchip.o
- .debug_frame   0x000021a0      0x160 Melexis/SensorArray.o
- .debug_frame   0x00002300      0x11c Tactile_Sensor/neural_spikes.o
- .debug_frame   0x0000241c       0x44 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m\libm.a(lib_a-w_sqrt.o)
- .debug_frame   0x00002460       0x34 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m\libm.a(lib_a-e_sqrt.o)
- .debug_frame   0x00002494       0x20 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m\libm.a(lib_a-s_matherr.o)
- .debug_frame   0x000024b4       0xac c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m\libgcc.a(_arm_addsubdf3.o)
- .debug_frame   0x00002560       0x50 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m\libgcc.a(_arm_muldivdf3.o)
- .debug_frame   0x000025b0       0xc4 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m\libgcc.a(_arm_cmpdf2.o)
- .debug_frame   0x00002674       0x20 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m\libgcc.a(_arm_unorddf2.o)
- .debug_frame   0x00002694       0x24 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m\libgcc.a(_arm_truncdfsf2.o)
- .debug_frame   0x000026b8       0x20 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m\libc_nano.a(lib_a-errno.o)
- .debug_frame   0x000026d8       0x2c c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m\libc_nano.a(lib_a-init.o)
- .debug_frame   0x00002704      0x11c c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m\libc_nano.a(lib_a-findfp.o)
+ .debug_frame   0x00001b3c      0x6ac Melexis/MLX90393_microchip.o
+ .debug_frame   0x000021e8      0x164 Melexis/SensorArray.o
+ .debug_frame   0x0000234c      0x11c Tactile_Sensor/neural_spikes.o
+ .debug_frame   0x00002468       0x44 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m\libm.a(lib_a-w_sqrt.o)
+ .debug_frame   0x000024ac       0x34 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m\libm.a(lib_a-e_sqrt.o)
+ .debug_frame   0x000024e0       0x20 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m\libm.a(lib_a-s_matherr.o)
+ .debug_frame   0x00002500       0xac c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m\libgcc.a(_arm_addsubdf3.o)
+ .debug_frame   0x000025ac       0x50 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m\libgcc.a(_arm_muldivdf3.o)
+ .debug_frame   0x000025fc       0xc4 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m\libgcc.a(_arm_cmpdf2.o)
+ .debug_frame   0x000026c0       0x20 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m\libgcc.a(_arm_unorddf2.o)
+ .debug_frame   0x000026e0       0x24 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m\libgcc.a(_arm_truncdfsf2.o)
+ .debug_frame   0x00002704       0x20 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m\libc_nano.a(lib_a-errno.o)
+ .debug_frame   0x00002724       0x2c c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m\libc_nano.a(lib_a-init.o)
+ .debug_frame   0x00002750      0x11c c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m\libc_nano.a(lib_a-findfp.o)

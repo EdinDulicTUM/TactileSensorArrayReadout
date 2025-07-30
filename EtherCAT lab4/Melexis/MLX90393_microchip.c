@@ -48,7 +48,7 @@ uint8_t select_prefix(struct MLX90393 *hall_sensor, int order_code_last_digit)
     return hall_sensor->I2C_prefix;
 }
 
-uint8_t begin(struct MLX90393 *hall_sensor, int order_code_last_digit, uint8_t A1, uint8_t A0, bool DRDY, struct io_descriptor *io) //int DRDY_pin, TwoWire &wirePort
+uint8_t begin(struct MLX90393 *hall_sensor, int order_code_last_digit, uint8_t A1, uint8_t A0, bool DRDY, struct i2c_m_sync_desc *const i2c, struct io_descriptor *io) //int DRDY_pin, TwoWire &wirePort
 {
   select_prefix(hall_sensor, order_code_last_digit);
   hall_sensor->I2C_address = hall_sensor->I2C_prefix | (A1?2:0) | (A0?1:0);
@@ -59,23 +59,23 @@ uint8_t begin(struct MLX90393 *hall_sensor, int order_code_last_digit, uint8_t A
   */
 
   //tbd
-  exit_command(hall_sensor, io);
-  uint8_t status1 = checkStatus(reset(hall_sensor, io));
-  uint8_t status2 = setGainSel(hall_sensor, 1, io); //7 is factory ours was 2
-  uint8_t status3 = setResolution(hall_sensor, 0, 0, 0, io); //0,0,0
-  uint8_t status4 = setOverSampling(hall_sensor, 1, io); //3
-  uint8_t status5 = setDigitalFiltering(hall_sensor, 2, io); //7
-  uint8_t status6 = setTemperatureCompensation(hall_sensor, 0, io);//0
+  exit_command(hall_sensor, i2c, io);
+  uint8_t status1 = checkStatus(reset(hall_sensor, i2c, io));
+  uint8_t status2 = setGainSel(hall_sensor, 1, i2c, io); //7 is factory ours was 2
+  uint8_t status3 = setResolution(hall_sensor, 0, 0, 0, i2c, io); //0,0,0
+  uint8_t status4 = setOverSampling(hall_sensor, 1, i2c, io); //3
+  uint8_t status5 = setDigitalFiltering(hall_sensor, 2, i2c, io); //7
+  uint8_t status6 = setTemperatureCompensation(hall_sensor, 0, i2c, io);//0
 
   return status1 | status2 | status3 | status4 | status5 | status6;
 }
 
 //sensor communication
 
-uint8_t sendCommand(struct MLX90393 *hall_sensor, uint8_t cmd, struct io_descriptor *io)
+uint8_t sendCommand(struct MLX90393 *hall_sensor, uint8_t cmd, struct i2c_m_sync_desc *const i2c, struct io_descriptor *io)
 {
   
-  i2c_m_sync_set_slaveaddr(&I2C_0, hall_sensor->I2C_address, I2C_M_SEVEN);
+  i2c_m_sync_set_slaveaddr(i2c, hall_sensor->I2C_address, I2C_M_SEVEN); // must be changed to accept any descriptor
   int32_t ret;
 
   uint8_t buffer_answer[1];
@@ -87,9 +87,9 @@ uint8_t sendCommand(struct MLX90393 *hall_sensor, uint8_t cmd, struct io_descrip
 }
 
 //Buffer muss geprüft werden
-uint8_t readRegister(struct MLX90393 *hall_sensor, uint8_t address, uint16_t *data, struct io_descriptor *io)
+uint8_t readRegister(struct MLX90393 *hall_sensor, uint8_t address, uint16_t *data, struct i2c_m_sync_desc *const i2c, struct io_descriptor *io)
 {
-  i2c_m_sync_set_slaveaddr(&I2C_0, hall_sensor->I2C_address, I2C_M_SEVEN);
+  i2c_m_sync_set_slaveaddr(i2c, hall_sensor->I2C_address, I2C_M_SEVEN); // must be changed to accept any descriptor
   
   int32_t ret;
   uint8_t cmd = CMD_READ_REGISTER;
@@ -108,11 +108,11 @@ uint8_t readRegister(struct MLX90393 *hall_sensor, uint8_t address, uint16_t *da
   return status;
 }
 
-uint8_t writeRegister(struct MLX90393 *hall_sensor, uint8_t address, uint16_t data, struct io_descriptor *io)
+uint8_t writeRegister(struct MLX90393 *hall_sensor, uint8_t address, uint16_t data, struct i2c_m_sync_desc *const i2c, struct io_descriptor *io)
 {
   cache_invalidate_address(hall_sensor, address);
 
-  i2c_m_sync_set_slaveaddr(&I2C_0, hall_sensor->I2C_address, I2C_M_SEVEN);
+  i2c_m_sync_set_slaveaddr(i2c, hall_sensor->I2C_address, I2C_M_SEVEN); // must be changed to accept any descriptor
   
   int32_t ret;
   uint8_t cmd = CMD_WRITE_REGISTER;
@@ -199,11 +199,11 @@ void cache_set(struct MLX90393 *hall_sensor, uint8_t address, uint16_t data){
   }
 }
 
-uint8_t cache_fill(struct MLX90393 *hall_sensor, struct io_descriptor *io) {
+uint8_t cache_fill(struct MLX90393 *hall_sensor, struct i2c_m_sync_desc *const i2c, struct io_descriptor *io) {
   if (hall_sensor->cache.dirty != 0) {
     for (uint8_t address=0; address < CACHESIZE; ++address){
       if (hall_sensor->cache.dirty & (1 << address)){
-        if (hasError(readRegister(hall_sensor, address, &(hall_sensor->cache.reg[address]), io))) {
+        if (hasError(readRegister(hall_sensor, address, &(hall_sensor->cache.reg[address]),i2c, io))) {
           return STATUS_ERROR;
         }
       }
@@ -214,11 +214,11 @@ uint8_t cache_fill(struct MLX90393 *hall_sensor, struct io_descriptor *io) {
 
 //sensor commands 
 
-uint8_t reset(struct MLX90393 *hall_sensor, struct io_descriptor *io)
+uint8_t reset(struct MLX90393 *hall_sensor,struct i2c_m_sync_desc *const i2c, struct io_descriptor *io)
 {
   cache_invalidate(hall_sensor);
 
-  uint8_t status = sendCommand(hall_sensor, CMD_RESET, io);
+  uint8_t status = sendCommand(hall_sensor, CMD_RESET, i2c, io);
   //Device now resets. We must give it time to complete
   delay_ms(3);
   // POR is 1.6ms max. Software reset time limit is not specified.
@@ -227,51 +227,51 @@ uint8_t reset(struct MLX90393 *hall_sensor, struct io_descriptor *io)
   return status;
 }
 
-uint8_t setGainSel(struct MLX90393 *hall_sensor, uint8_t gain_sel, struct io_descriptor *io)
+uint8_t setGainSel(struct MLX90393 *hall_sensor, uint8_t gain_sel,struct i2c_m_sync_desc *const i2c, struct io_descriptor *io)
 {
   uint16_t old_val = 0;
-  uint8_t status1 = readRegister(hall_sensor, GAIN_SEL_REG, &old_val, io);
-  uint8_t status2 = writeRegister(hall_sensor, GAIN_SEL_REG, (old_val & ~GAIN_SEL_MASK) | (((uint16_t) gain_sel << GAIN_SEL_SHIFT) & GAIN_SEL_MASK), io);
+  uint8_t status1 = readRegister(hall_sensor, GAIN_SEL_REG, &old_val, i2c, io);
+  uint8_t status2 = writeRegister(hall_sensor, GAIN_SEL_REG, (old_val & ~GAIN_SEL_MASK) | (((uint16_t) gain_sel << GAIN_SEL_SHIFT) & GAIN_SEL_MASK), i2c, io);
   return checkStatus(status1) | checkStatus(status2);
 }
 
-uint8_t getGainSel(struct MLX90393 *hall_sensor, uint8_t gain_sel, struct io_descriptor *io)
+uint8_t getGainSel(struct MLX90393 *hall_sensor, uint8_t gain_sel, struct i2c_m_sync_desc *const i2c, struct io_descriptor *io)
 {
   uint16_t reg_val = 0;
-  uint8_t status = readRegister(hall_sensor, GAIN_SEL_REG, &reg_val, io);
+  uint8_t status = readRegister(hall_sensor, GAIN_SEL_REG, &reg_val, i2c, io);
   gain_sel = (reg_val & GAIN_SEL_MASK) >> GAIN_SEL_SHIFT;
   return checkStatus(status);
 }
 
-uint8_t setHallConf(struct MLX90393 *hall_sensor, uint8_t hallconf, struct io_descriptor *io)
+uint8_t setHallConf(struct MLX90393 *hall_sensor, uint8_t hallconf, struct i2c_m_sync_desc *const i2c, struct io_descriptor *io)
 {
   uint16_t old_val = 0;
-  uint8_t status1 = readRegister(hall_sensor, HALLCONF_REG, &old_val, io);
-  uint8_t status2 = writeRegister(hall_sensor, HALLCONF_REG, (old_val & ~HALLCONF_MASK) | (((uint16_t) hallconf << HALLCONF_SHIFT) & HALLCONF_MASK), io);
+  uint8_t status1 = readRegister(hall_sensor, HALLCONF_REG, &old_val, i2c, io);
+  uint8_t status2 = writeRegister(hall_sensor, HALLCONF_REG, (old_val & ~HALLCONF_MASK) | (((uint16_t) hallconf << HALLCONF_SHIFT) & HALLCONF_MASK), i2c, io);
   return checkStatus(status1) | checkStatus(status2);
 }
 
-uint8_t getHallConf(struct MLX90393 *hall_sensor, uint8_t hallconf, struct io_descriptor *io)
+uint8_t getHallConf(struct MLX90393 *hall_sensor, uint8_t hallconf, struct i2c_m_sync_desc *const i2c, struct io_descriptor *io)
 {
   uint16_t reg_val = 0;
-  uint8_t status = readRegister(hall_sensor, HALLCONF_REG, &reg_val, io);
+  uint8_t status = readRegister(hall_sensor, HALLCONF_REG, &reg_val, i2c, io);
   hallconf = (reg_val & HALLCONF_MASK) >> HALLCONF_SHIFT;
   return checkStatus(status);
 }
 
-uint8_t setResolution(struct MLX90393 *hall_sensor, uint8_t res_x, uint8_t res_y, uint8_t res_z, struct io_descriptor *io)
+uint8_t setResolution(struct MLX90393 *hall_sensor, uint8_t res_x, uint8_t res_y, uint8_t res_z, struct i2c_m_sync_desc *const i2c, struct io_descriptor *io)
 {
   uint16_t res_xyz = ((res_z & 0x3)<<4) | ((res_y & 0x3)<<2) | (res_x & 0x3);
   uint16_t old_val = 0;
-  uint8_t status1 = readRegister(hall_sensor, RES_XYZ_REG, &old_val, io);
-  uint8_t status2 = writeRegister(hall_sensor, RES_XYZ_REG, (old_val & ~RES_XYZ_MASK) | ((res_xyz << RES_XYZ_SHIFT) & RES_XYZ_MASK), io);
+  uint8_t status1 = readRegister(hall_sensor, RES_XYZ_REG, &old_val, i2c, io);
+  uint8_t status2 = writeRegister(hall_sensor, RES_XYZ_REG, (old_val & ~RES_XYZ_MASK) | ((res_xyz << RES_XYZ_SHIFT) & RES_XYZ_MASK), i2c, io);
   return checkStatus(status1) | checkStatus(status2);
 }
 
-uint8_t getResolution(struct MLX90393 *hall_sensor, uint8_t res_x, uint8_t res_y, uint8_t res_z, struct io_descriptor *io)
+uint8_t getResolution(struct MLX90393 *hall_sensor, uint8_t res_x, uint8_t res_y, uint8_t res_z, struct i2c_m_sync_desc *const i2c, struct io_descriptor *io)
 {
   uint16_t reg_val = 0;
-  uint8_t status = readRegister(hall_sensor, RES_XYZ_REG, &reg_val, io);
+  uint8_t status = readRegister(hall_sensor, RES_XYZ_REG, &reg_val, i2c, io);
   uint8_t res_xyz = (reg_val & RES_XYZ_MASK) >> RES_XYZ_SHIFT;
   res_x = (res_xyz >> 0) & 0x3;
   res_y = (res_xyz >> 2) & 0x3;
@@ -279,183 +279,183 @@ uint8_t getResolution(struct MLX90393 *hall_sensor, uint8_t res_x, uint8_t res_y
   return checkStatus(status);
 }
 
-uint8_t setOverSampling(struct MLX90393 *hall_sensor, uint8_t osr, struct io_descriptor *io)
+uint8_t setOverSampling(struct MLX90393 *hall_sensor, uint8_t osr, struct i2c_m_sync_desc *const i2c, struct io_descriptor *io)
 {
   uint16_t old_val = 0;
-  uint8_t status1 = readRegister(hall_sensor, OSR_REG, &old_val, io);
-  uint8_t status2 = writeRegister(hall_sensor, OSR_REG, (old_val & ~OSR_MASK) | (((uint16_t)osr << OSR_SHIFT) & OSR_MASK), io);
+  uint8_t status1 = readRegister(hall_sensor, OSR_REG, &old_val, i2c, io);
+  uint8_t status2 = writeRegister(hall_sensor, OSR_REG, (old_val & ~OSR_MASK) | (((uint16_t)osr << OSR_SHIFT) & OSR_MASK), i2c, io);
   return checkStatus(status1) | checkStatus(status2);
 }
 
-uint8_t getOverSampling(struct MLX90393 *hall_sensor, uint8_t osr, struct io_descriptor *io)
+uint8_t getOverSampling(struct MLX90393 *hall_sensor, uint8_t osr, struct i2c_m_sync_desc *const i2c, struct io_descriptor *io)
 {
   uint16_t reg_val = 0;
-  uint8_t status = readRegister(hall_sensor, OSR_REG, &reg_val, io);
+  uint8_t status = readRegister(hall_sensor, OSR_REG, &reg_val, i2c, io);
   osr = (reg_val & OSR_MASK) >> OSR_SHIFT;
   return checkStatus(status);
 }
 
-uint8_t setDigitalFiltering(struct MLX90393 *hall_sensor, uint8_t dig_flt, struct io_descriptor *io)
+uint8_t setDigitalFiltering(struct MLX90393 *hall_sensor, uint8_t dig_flt, struct i2c_m_sync_desc *const i2c, struct io_descriptor *io)
 {
   uint16_t old_val = 0;
-  uint8_t status1 = readRegister(hall_sensor, DIG_FLT_REG, &old_val, io);
-  uint8_t status2 = writeRegister(hall_sensor, DIG_FLT_REG, (old_val & ~DIG_FLT_MASK) | (((uint16_t) dig_flt << DIG_FLT_SHIFT) & DIG_FLT_MASK),io);
+  uint8_t status1 = readRegister(hall_sensor, DIG_FLT_REG, &old_val, i2c, io);
+  uint8_t status2 = writeRegister(hall_sensor, DIG_FLT_REG, (old_val & ~DIG_FLT_MASK) | (((uint16_t) dig_flt << DIG_FLT_SHIFT) & DIG_FLT_MASK), i2c, io);
   return checkStatus(status1) | checkStatus(status2);
 }
 
-uint8_t getDigitalFiltering(struct MLX90393 *hall_sensor, uint8_t dig_flt, struct io_descriptor *io)
+uint8_t getDigitalFiltering(struct MLX90393 *hall_sensor, uint8_t dig_flt, struct i2c_m_sync_desc *const i2c, struct io_descriptor *io)
 {
   uint16_t reg_val = 0;
-  uint8_t status = readRegister(hall_sensor, DIG_FLT_REG, &reg_val, io);
+  uint8_t status = readRegister(hall_sensor, DIG_FLT_REG, &reg_val, i2c, io);
   dig_flt = (reg_val & DIG_FLT_MASK) >> DIG_FLT_SHIFT;
   return checkStatus(status);
 }
 
-uint8_t setTemperatureCompensation(struct MLX90393 *hall_sensor, uint8_t enabled, struct io_descriptor *io)
+uint8_t setTemperatureCompensation(struct MLX90393 *hall_sensor, uint8_t enabled, struct i2c_m_sync_desc *const i2c, struct io_descriptor *io)
 {
   uint8_t tcmp_en = enabled?1:0;
   uint16_t old_val = 0;
-  uint8_t status1 = readRegister(hall_sensor, TCMP_EN_REG, &old_val, io);
-  uint8_t status2 = writeRegister(hall_sensor, TCMP_EN_REG, (old_val & ~TCMP_EN_MASK) | (((uint16_t) tcmp_en << TCMP_EN_SHIFT) & TCMP_EN_MASK), io);
+  uint8_t status1 = readRegister(hall_sensor, TCMP_EN_REG, &old_val, i2c, io);
+  uint8_t status2 = writeRegister(hall_sensor, TCMP_EN_REG, (old_val & ~TCMP_EN_MASK) | (((uint16_t) tcmp_en << TCMP_EN_SHIFT) & TCMP_EN_MASK), i2c, io);
   return checkStatus(status1) | checkStatus(status2);
 }
 
-uint8_t getTemperatureCompensation(struct MLX90393 *hall_sensor, uint8_t enabled, struct io_descriptor *io)
+uint8_t getTemperatureCompensation(struct MLX90393 *hall_sensor, uint8_t enabled, struct i2c_m_sync_desc *const i2c, struct io_descriptor *io)
 {
   uint16_t reg_val = 0;
-  uint8_t status = readRegister(hall_sensor, TCMP_EN_REG, &reg_val, io);
+  uint8_t status = readRegister(hall_sensor, TCMP_EN_REG, &reg_val, i2c, io);
   enabled = (reg_val & TCMP_EN_MASK) >> TCMP_EN_SHIFT;
   return checkStatus(status);
 }
 
-uint8_t setTemperatureOverSampling(struct MLX90393 *hall_sensor, uint8_t osr2, struct io_descriptor *io)
+uint8_t setTemperatureOverSampling(struct MLX90393 *hall_sensor, uint8_t osr2, struct i2c_m_sync_desc *const i2c, struct io_descriptor *io)
 {
   uint16_t old_val = 0;
-  uint8_t status1 = readRegister(hall_sensor, OSR2_REG, &old_val, io);
-  uint8_t status2 = writeRegister(hall_sensor, OSR2_REG, (old_val & ~OSR2_MASK) | (((uint16_t) osr2 << OSR2_SHIFT) & OSR2_MASK), io);
+  uint8_t status1 = readRegister(hall_sensor, OSR2_REG, &old_val, i2c, io);
+  uint8_t status2 = writeRegister(hall_sensor, OSR2_REG, (old_val & ~OSR2_MASK) | (((uint16_t) osr2 << OSR2_SHIFT) & OSR2_MASK), i2c, io);
   return checkStatus(status1) | checkStatus(status2);
 }
 
-uint8_t getTemperatureOverSampling(struct MLX90393 *hall_sensor, uint8_t osr2, struct io_descriptor *io)
+uint8_t getTemperatureOverSampling(struct MLX90393 *hall_sensor, uint8_t osr2, struct i2c_m_sync_desc *const i2c, struct io_descriptor *io)
 {
   uint16_t reg_val = 0;
-  uint8_t status = readRegister(hall_sensor, OSR2_REG, &reg_val, io);
+  uint8_t status = readRegister(hall_sensor, OSR2_REG, &reg_val, i2c, io);
   osr2 = (reg_val & OSR2_MASK) >> OSR2_SHIFT;
   return checkStatus(status);
 }
 
-uint8_t setBurstSel(struct MLX90393 *hall_sensor, uint8_t burst_sel, struct io_descriptor *io)
+uint8_t setBurstSel(struct MLX90393 *hall_sensor, uint8_t burst_sel, struct i2c_m_sync_desc *const i2c, struct io_descriptor *io)
 {
   uint16_t old_val = 0;
-  uint8_t status1 = readRegister(hall_sensor, BURST_SEL_REG, &old_val, io);
-  uint8_t status2 = writeRegister(hall_sensor, BURST_SEL_REG, (old_val & ~BURST_SEL_MASK) | (((uint16_t) burst_sel << BURST_SEL_SHIFT) & BURST_SEL_MASK), io);
+  uint8_t status1 = readRegister(hall_sensor, BURST_SEL_REG, &old_val, i2c, io);
+  uint8_t status2 = writeRegister(hall_sensor, BURST_SEL_REG, (old_val & ~BURST_SEL_MASK) | (((uint16_t) burst_sel << BURST_SEL_SHIFT) & BURST_SEL_MASK), i2c, io);
   return checkStatus(status1) | checkStatus(status2);
 }
 
-uint8_t getBurstSel(struct MLX90393 *hall_sensor, uint8_t burst_sel, struct io_descriptor *io)
+uint8_t getBurstSel(struct MLX90393 *hall_sensor, uint8_t burst_sel, struct i2c_m_sync_desc *const i2c, struct io_descriptor *io)
 {
   uint16_t reg_val = 0;
-  uint8_t status = readRegister(hall_sensor, BURST_SEL_REG, &reg_val, io);
+  uint8_t status = readRegister(hall_sensor, BURST_SEL_REG, &reg_val, i2c, io);
   burst_sel = (reg_val & BURST_SEL_MASK) >> BURST_SEL_SHIFT;
   return checkStatus(status);
 }
 
-uint8_t setExtTrig(struct MLX90393 *hall_sensor, int8_t ext_trig, struct io_descriptor *io)
+uint8_t setExtTrig(struct MLX90393 *hall_sensor, int8_t ext_trig, struct i2c_m_sync_desc *const i2c, struct io_descriptor *io)
 {
   uint16_t old_val = 0;
-  uint8_t status1 = readRegister(hall_sensor, EXT_TRIG_REG, &old_val, io);
-  uint8_t status2 = writeRegister(hall_sensor, EXT_TRIG_REG, (old_val & ~EXT_TRIG_MASK) | (((uint16_t) ext_trig << EXT_TRIG_SHIFT) & EXT_TRIG_MASK), io);
+  uint8_t status1 = readRegister(hall_sensor, EXT_TRIG_REG, &old_val, i2c, io);
+  uint8_t status2 = writeRegister(hall_sensor, EXT_TRIG_REG, (old_val & ~EXT_TRIG_MASK) | (((uint16_t) ext_trig << EXT_TRIG_SHIFT) & EXT_TRIG_MASK), i2c, io);
   return checkStatus(status1) | checkStatus(status2);
 }
 
-uint8_t getExtTrig(struct MLX90393 *hall_sensor, uint8_t ext_trig, struct io_descriptor *io)
+uint8_t getExtTrig(struct MLX90393 *hall_sensor, uint8_t ext_trig, struct i2c_m_sync_desc *const i2c, struct io_descriptor *io)
 {
   uint16_t reg_val = 0;
-  uint8_t status = readRegister(hall_sensor, EXT_TRIG_REG, &reg_val, io);
+  uint8_t status = readRegister(hall_sensor, EXT_TRIG_REG, &reg_val, i2c, io);
   ext_trig = (reg_val & EXT_TRIG_MASK) >> EXT_TRIG_SHIFT;
   return checkStatus(status);
 
 }
 
-uint8_t setTrigIntSel(struct MLX90393 *hall_sensor, uint8_t trig_int_sel, struct io_descriptor *io)
+uint8_t setTrigIntSel(struct MLX90393 *hall_sensor, uint8_t trig_int_sel, struct i2c_m_sync_desc *const i2c, struct io_descriptor *io)
 {
   uint16_t old_val = 0;
-  uint8_t status1 = readRegister(hall_sensor, TRIG_INT_SEL_REG, &old_val, io);
-  uint8_t status2 = writeRegister(hall_sensor, TRIG_INT_SEL_REG, (old_val & ~TRIG_INT_SEL_MASK) | (((uint16_t)trig_int_sel << TRIG_INT_SEL_SHIFT) & TRIG_INT_SEL_MASK), io);
+  uint8_t status1 = readRegister(hall_sensor, TRIG_INT_SEL_REG, &old_val, i2c, io);
+  uint8_t status2 = writeRegister(hall_sensor, TRIG_INT_SEL_REG, (old_val & ~TRIG_INT_SEL_MASK) | (((uint16_t)trig_int_sel << TRIG_INT_SEL_SHIFT) & TRIG_INT_SEL_MASK), i2c, io);
   return checkStatus(status1) | checkStatus(status2);
 }
 
-uint8_t getTrigIntSel(struct MLX90393 *hall_sensor, uint8_t trig_int_sel, struct io_descriptor *io)
+uint8_t getTrigIntSel(struct MLX90393 *hall_sensor, uint8_t trig_int_sel, struct i2c_m_sync_desc *const i2c, struct io_descriptor *io)
 {
   uint16_t reg_val = 0;
-  uint8_t status = readRegister(hall_sensor, TRIG_INT_SEL_REG, &reg_val, io);
+  uint8_t status = readRegister(hall_sensor, TRIG_INT_SEL_REG, &reg_val, i2c, io);
   trig_int_sel = (reg_val & TRIG_INT_SEL_MASK) >> TRIG_INT_SEL_SHIFT;
   return checkStatus(status);
 }
 
-uint8_t setOffsets(struct MLX90393 *hall_sensor, uint16_t x, uint16_t y, uint16_t z, struct io_descriptor *io)
+uint8_t setOffsets(struct MLX90393 *hall_sensor, uint16_t x, uint16_t y, uint16_t z, struct i2c_m_sync_desc *const i2c, struct io_descriptor *io)
 {
-  uint8_t status1 = writeRegister(hall_sensor, X_OFFSET_REG, x, io);
-  uint8_t status2 = writeRegister(hall_sensor, Y_OFFSET_REG, y, io);
-  uint8_t status3 = writeRegister(hall_sensor, Z_OFFSET_REG, z, io);
+  uint8_t status1 = writeRegister(hall_sensor, X_OFFSET_REG, x, i2c, io);
+  uint8_t status2 = writeRegister(hall_sensor, Y_OFFSET_REG, y, i2c, io);
+  uint8_t status3 = writeRegister(hall_sensor, Z_OFFSET_REG, z, i2c, io);
   return checkStatus(status1) | checkStatus(status2) | checkStatus(status3);
 }
 
-uint8_t setWOXYThreshold(struct MLX90393 *hall_sensor, uint16_t woxy_thresh, struct io_descriptor *io)
+uint8_t setWOXYThreshold(struct MLX90393 *hall_sensor, uint16_t woxy_thresh, struct i2c_m_sync_desc *const i2c, struct io_descriptor *io)
 {
-  uint8_t status = writeRegister(hall_sensor, WOXY_THRESHOLD_REG, woxy_thresh, io);
+  uint8_t status = writeRegister(hall_sensor, WOXY_THRESHOLD_REG, woxy_thresh, i2c, io);
   return checkStatus(status);
 }
 
-uint8_t setWOZThreshold(struct MLX90393 *hall_sensor, uint16_t woz_thresh, struct io_descriptor *io)
+uint8_t setWOZThreshold(struct MLX90393 *hall_sensor, uint16_t woz_thresh, struct i2c_m_sync_desc *const i2c, struct io_descriptor *io)
 {
-  uint8_t status = writeRegister(hall_sensor, WOZ_THRESHOLD_REG, woz_thresh, io);
+  uint8_t status = writeRegister(hall_sensor, WOZ_THRESHOLD_REG, woz_thresh, i2c, io);
   return checkStatus(status);
 }
 
-uint8_t setWOTThreshold(struct MLX90393 *hall_sensor, uint16_t wot_thresh, struct io_descriptor *io)
+uint8_t setWOTThreshold(struct MLX90393 *hall_sensor, uint16_t wot_thresh, struct i2c_m_sync_desc *const i2c, struct io_descriptor *io)
 {
-  uint8_t status = writeRegister(hall_sensor, WOT_THRESHOLD_REG, wot_thresh, io);
+  uint8_t status = writeRegister(hall_sensor, WOT_THRESHOLD_REG, wot_thresh, i2c, io);
   return checkStatus(status);
 }
 
-uint8_t nop(struct MLX90393 *hall_sensor, struct io_descriptor *io)
+uint8_t nop(struct MLX90393 *hall_sensor, struct i2c_m_sync_desc *const i2c, struct io_descriptor *io)
 {
-  return sendCommand(hall_sensor, CMD_NOP, io);
+  return sendCommand(hall_sensor, CMD_NOP, i2c, io);
 }
 
-uint8_t exit_command(struct MLX90393 *hall_sensor, struct io_descriptor *io)
+uint8_t exit_command(struct MLX90393 *hall_sensor, struct i2c_m_sync_desc *const i2c, struct io_descriptor *io)
 {
-  return sendCommand(hall_sensor, CMD_EXIT, io);
+  return sendCommand(hall_sensor, CMD_EXIT, i2c, io);
   delay_ms(2);
 }
 
-uint8_t startBurst(struct MLX90393 *hall_sensor, uint8_t zyxt_flags, struct io_descriptor *io)
+uint8_t startBurst(struct MLX90393 *hall_sensor, uint8_t zyxt_flags, struct i2c_m_sync_desc *const i2c, struct io_descriptor *io)
 {
-  cache_fill(hall_sensor, io);
+  cache_fill(hall_sensor, i2c, io);
   uint8_t cmd = CMD_START_BURST | (zyxt_flags & 0xf);
-  return sendCommand(hall_sensor, cmd, io);
+  return sendCommand(hall_sensor, cmd, i2c, io);
 }
 
-uint8_t startWakeOnChange(struct MLX90393 *hall_sensor, uint8_t zyxt_flags, struct io_descriptor *io)
+uint8_t startWakeOnChange(struct MLX90393 *hall_sensor, uint8_t zyxt_flags, struct i2c_m_sync_desc *const i2c, struct io_descriptor *io)
 {
-  cache_fill(hall_sensor, io);
+  cache_fill(hall_sensor, i2c, io);
   uint8_t cmd = CMD_WAKE_ON_CHANGE | (zyxt_flags & 0xf);
-  return sendCommand(hall_sensor, cmd, io);
+  return sendCommand(hall_sensor, cmd, i2c, io);
 }
 
-uint8_t startMeasurement(struct MLX90393 *hall_sensor, uint8_t zyxt_flags, struct io_descriptor *io)
+uint8_t startMeasurement(struct MLX90393 *hall_sensor, uint8_t zyxt_flags, struct i2c_m_sync_desc *const i2c, struct io_descriptor *io)
 {
-  cache_fill(hall_sensor, io);
+  cache_fill(hall_sensor, i2c, io);
   uint8_t cmd = CMD_START_MEASUREMENT | (zyxt_flags & 0xf);
-  return sendCommand(hall_sensor, cmd, io);
+  return sendCommand(hall_sensor, cmd, i2c, io);
 }
 
-uint8_t readMeasurement(struct MLX90393 *hall_sensor, uint8_t zyxt_flags, struct io_descriptor *io)
+uint8_t readMeasurement(struct MLX90393 *hall_sensor, uint8_t zyxt_flags, struct i2c_m_sync_desc *const i2c, struct io_descriptor *io)
 {
   uint8_t cmd = CMD_READ_MEASUREMENT | (zyxt_flags & 0xf);
   
-  i2c_m_sync_set_slaveaddr(&I2C_0, hall_sensor->I2C_address, I2C_M_SEVEN);
+  i2c_m_sync_set_slaveaddr(i2c, hall_sensor->I2C_address, I2C_M_SEVEN); // must be changed to accept any descriptor
 
   int32_t ret;
 
@@ -498,15 +498,15 @@ uint8_t readMeasurement(struct MLX90393 *hall_sensor, uint8_t zyxt_flags, struct
   return buffer[0];
 }
 
-uint8_t memoryRecall(struct MLX90393 *hall_sensor, struct io_descriptor *io)
+uint8_t memoryRecall(struct MLX90393 *hall_sensor, struct i2c_m_sync_desc *const i2c, struct io_descriptor *io)
 {
   cache_invalidate(hall_sensor);
-  return sendCommand(hall_sensor, CMD_MEMORY_RECALL, io);
+  return sendCommand(hall_sensor, CMD_MEMORY_RECALL, i2c, io);
 }
 
-uint8_t memoryStore(struct MLX90393 *hall_sensor, struct io_descriptor *io)
+uint8_t memoryStore(struct MLX90393 *hall_sensor, struct i2c_m_sync_desc *const i2c, struct io_descriptor *io)
 {
-  return sendCommand(hall_sensor, CMD_MEMORY_STORE, io);
+  return sendCommand(hall_sensor, CMD_MEMORY_STORE, i2c, io);
 }
 
 void convertRaw(struct MLX90393 *hall_sensor)
@@ -677,9 +677,9 @@ uint16_t convDelayMicro(struct MLX90393 *hall_sensor) {
 	return delayTimeMicro_final;
 }
 
-uint8_t readData(struct MLX90393 *hall_sensor, struct io_descriptor *io)
+uint8_t readData(struct MLX90393 *hall_sensor, struct i2c_m_sync_desc *const i2c, struct io_descriptor *io)
 {
-  uint8_t status1 = startMeasurement(hall_sensor, X_FLAG | Y_FLAG | Z_FLAG | T_FLAG, io);
+  uint8_t status1 = startMeasurement(hall_sensor, X_FLAG | Y_FLAG | Z_FLAG | T_FLAG, i2c, io);
 
   // wait for DRDY signal if connected, otherwise delay appropriately
   if (hall_sensor->DRDY_pin == true){
@@ -693,7 +693,7 @@ uint8_t readData(struct MLX90393 *hall_sensor, struct io_descriptor *io)
     delay_ms(convDelayMillis(hall_sensor));
   }
 
-  uint8_t status2 = readMeasurement(hall_sensor, X_FLAG | Y_FLAG | Z_FLAG | T_FLAG, io);
+  uint8_t status2 = readMeasurement(hall_sensor, X_FLAG | Y_FLAG | Z_FLAG | T_FLAG, i2c, io);
   convertRaw(hall_sensor);
   return checkStatus(status1) | checkStatus(status2);
 }

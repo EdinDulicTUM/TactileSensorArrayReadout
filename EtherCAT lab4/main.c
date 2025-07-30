@@ -56,6 +56,7 @@ struct sensor_array sensor_array_2;
 bool new_data;
 bool triggered;
 bool data_readout;
+bool data_sent;
 uint16_t wait_time;
 uint8_t selected_row; 
 uint8_t selected_output_mode;
@@ -267,11 +268,14 @@ int main(void)
 	configure_ethercat_dma_descriptors();
 	
 	//Initialize I2C communication
+	
 	i2c_m_sync_get_io_descriptor(&I2C_0, &bmx_io);
 	i2c_m_sync_enable(&I2C_0);
 	
+	
 	i2c_m_sync_get_io_descriptor(&I2C_1, &bmx_io_2);
 	i2c_m_sync_enable(&I2C_1);
+	
 	
 	//Reset TRG Pin
 	gpio_set_pin_level(TRG,false);
@@ -280,35 +284,38 @@ int main(void)
 	new_data = false;
 	triggered = false;
 	data_readout = false;
+	data_sent = false;
 	wait_time = convDelayMicro(&(sensor_array_1.sensor9));
 	selected_row = 1; //1 = left, 2 = middle, 3 = right
-	selected_array = 1; // needs to be implemented
+	selected_array = 1; 
 	
 	// User Input
 	selected_output_mode = 1; //1 = Force, 2 = Neural Spikes
-	number_of_arrays = 1; // how many arrays you want to read out at the same time - implementation necessairy!
+	number_of_arrays = 2; // how many arrays you want to read out at the same time - implementation necessairy!
 	
 	
 	// Initialize Sensor Array
+	
 	sensor_array_1.array_number = 1;
 	SensorArray_Init(&(sensor_array_1.sensor1),&(sensor_array_1.sensor2),&(sensor_array_1.sensor3),
 					 &(sensor_array_1.sensor4),&(sensor_array_1.sensor5),&(sensor_array_1.sensor6),
-					 &(sensor_array_1.sensor7),&(sensor_array_1.sensor8),&(sensor_array_1.sensor9),bmx_io);
+					 &(sensor_array_1.sensor7),&(sensor_array_1.sensor8),&(sensor_array_1.sensor9), &I2C_0, bmx_io);
 	neuron_init_array(&(sensor_array_1.neuron_pair_1_top), &(sensor_array_1.neuron_pair_1_middle), &(sensor_array_1.neuron_pair_1_bottom),
 					  &(sensor_array_1.neuron_pair_2_top), &(sensor_array_1.neuron_pair_2_middle), &(sensor_array_1.neuron_pair_2_bottom), 
 					  &(sensor_array_1.neuron_pair_3_top), &(sensor_array_1.neuron_pair_3_middle), &(sensor_array_1.neuron_pair_3_bottom));
+	delay_ms(10);
 	
 	if (number_of_arrays == 2)
 	{
 		sensor_array_2.array_number = 2;
 		SensorArray_Init(&(sensor_array_2.sensor1),&(sensor_array_2.sensor2),&(sensor_array_2.sensor3),
 						 &(sensor_array_2.sensor4),&(sensor_array_2.sensor5),&(sensor_array_2.sensor6),
-						 &(sensor_array_2.sensor7),&(sensor_array_2.sensor8),&(sensor_array_2.sensor9),bmx_io);
+						 &(sensor_array_2.sensor7),&(sensor_array_2.sensor8),&(sensor_array_2.sensor9), &I2C_1, bmx_io_2);
 		neuron_init_array(&(sensor_array_2.neuron_pair_1_top), &(sensor_array_2.neuron_pair_1_middle), &(sensor_array_2.neuron_pair_1_bottom),
 						  &(sensor_array_2.neuron_pair_2_top), &(sensor_array_2.neuron_pair_2_middle), &(sensor_array_2.neuron_pair_2_bottom),
 						  &(sensor_array_2.neuron_pair_3_top), &(sensor_array_2.neuron_pair_3_middle), &(sensor_array_2.neuron_pair_3_bottom));
 	}
-
+	delay_ms(10);
 	// Activate Interrupt
 	NVIC_EnableIRQ(TC3_IRQn);
 	
@@ -331,35 +338,38 @@ int main(void)
 			{
 				triggerReadoutArray(&(sensor_array_1.sensor1),&(sensor_array_1.sensor2),&(sensor_array_1.sensor3),
 									&(sensor_array_1.sensor4),&(sensor_array_1.sensor5),&(sensor_array_1.sensor6),
-									&(sensor_array_1.sensor7),&(sensor_array_1.sensor8),&(sensor_array_1.sensor9),bmx_io);
+									&(sensor_array_1.sensor7),&(sensor_array_1.sensor8),&(sensor_array_1.sensor9), &I2C_0, bmx_io);
 			}
 			if (selected_array == 2)
 			{
 				triggerReadoutArray(&(sensor_array_2.sensor1),&(sensor_array_2.sensor2),&(sensor_array_2.sensor3),
 									&(sensor_array_2.sensor4),&(sensor_array_2.sensor5),&(sensor_array_2.sensor6),
-									&(sensor_array_2.sensor7),&(sensor_array_2.sensor8),&(sensor_array_2.sensor9),bmx_io_2);
+									&(sensor_array_2.sensor7),&(sensor_array_2.sensor8),&(sensor_array_2.sensor9), &I2C_1, bmx_io_2);
 			}
 		
 			new_data = false; 
 			data_readout = true;
 		}
 		
-		if(data_readout == true && row_change_possible == true )
+		if(data_readout == true && row_change_possible == true && data_sent == false)
 		{
 			if (selected_array == 1)
 			{
-				SensorRowUpdate(&sensor_array_1, selected_row, selected_output_mode);
+				SensorRowUpdate(&sensor_array_1, selected_row, selected_output_mode);		
+				//delay_ms(2);
 			}
 			if (selected_array == 2)
 			{
-				SensorRowUpdate(&sensor_array_2, selected_row, selected_output_mode);
+				SensorRowUpdate(&sensor_array_2, selected_row, selected_output_mode);	
+				//delay_ms(2);
 			}
 			selected_row++;	
 			row_change_possible == false;
 			if (selected_row == 4)
 			{
-				selected_row = 1 ;
+				selected_row = 1;
 				selected_array++;
+				data_sent = true;
 				if (selected_array > number_of_arrays)
 				 {
 					 selected_array = 1;
@@ -378,5 +388,6 @@ void TC3_Handler(void){
 	else if (TC3->COUNT16.INTFLAG.bit.MC1){
 		TC3->COUNT16.INTFLAG.bit.MC1 =1;
 		new_data = true;
+		data_sent = false;
 	}
 };

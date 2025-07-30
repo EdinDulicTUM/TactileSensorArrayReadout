@@ -8,12 +8,12 @@
 #include <math.h>
 
 
-void triggerInitialize(struct MLX90393 *hall_sensor, struct io_descriptor *io)
+void triggerInitialize(struct MLX90393 *hall_sensor, struct i2c_m_sync_desc *const i2c, struct io_descriptor *io)
 {
 		//setTrigIntSel(hall_sensor,1,io);
-		setExtTrig(hall_sensor,1,io);
+		setExtTrig(hall_sensor,1,i2c,io);
 		//startMeasurement(hall_sensor, X_FLAG | Y_FLAG | Z_FLAG | T_FLAG, io);
-		startMeasurement(hall_sensor, X_FLAG | Y_FLAG | Z_FLAG, io);
+		startMeasurement(hall_sensor, X_FLAG | Y_FLAG | Z_FLAG, i2c, io);
 }
 
 
@@ -36,10 +36,10 @@ void triggerReadout_Prepare_Timer(uint16_t pulseTime)
 	triggerSensor(pulseTime);
 };
 
-uint8_t triggerReadout(struct MLX90393 *hall_sensor, struct io_descriptor *io)
+uint8_t triggerReadout(struct MLX90393 *hall_sensor, struct i2c_m_sync_desc *const i2c, struct io_descriptor *io)
 {
 	//uint8_t status = readMeasurement(hall_sensor, X_FLAG | Y_FLAG | Z_FLAG | T_FLAG, io);
-	uint8_t status = readMeasurement(hall_sensor, X_FLAG | Y_FLAG | Z_FLAG , io);
+	uint8_t status = readMeasurement(hall_sensor, X_FLAG | Y_FLAG | Z_FLAG , i2c, io);
 	convertRaw(hall_sensor);
 	return checkStatus(status);
 };
@@ -48,78 +48,78 @@ uint8_t triggerReadout(struct MLX90393 *hall_sensor, struct io_descriptor *io)
 uint8_t triggerReadoutArray(struct MLX90393 *hall_sensor_1, struct MLX90393 *hall_sensor_2, struct MLX90393 *hall_sensor_3, 
 						    struct MLX90393 *hall_sensor_4, struct MLX90393 *hall_sensor_5, struct MLX90393 *hall_sensor_6, 
 					        struct MLX90393 *hall_sensor_7, struct MLX90393 *hall_sensor_8, struct MLX90393 *hall_sensor_9,
-					        struct io_descriptor *io)
+					        struct i2c_m_sync_desc *const i2c, struct io_descriptor *io)
 {
-	uint8_t status1 = triggerReadout(hall_sensor_1,io);
-	uint8_t status2 = triggerReadout(hall_sensor_2,io);
-	uint8_t status3 = triggerReadout(hall_sensor_3,io);
-	uint8_t status4 = triggerReadout(hall_sensor_4,io);
-	uint8_t status5 = triggerReadout(hall_sensor_5,io);
-	uint8_t status6 = triggerReadout(hall_sensor_6,io);
-	uint8_t status7 = triggerReadout(hall_sensor_7,io);
-	uint8_t status8 = triggerReadout(hall_sensor_8,io);
-	uint8_t status9 = triggerReadout(hall_sensor_9,io);
+	uint8_t status1 = triggerReadout(hall_sensor_1,i2c,io);
+	uint8_t status2 = triggerReadout(hall_sensor_2,i2c,io);
+	uint8_t status3 = triggerReadout(hall_sensor_3,i2c,io);
+	uint8_t status4 = triggerReadout(hall_sensor_4,i2c,io);
+	uint8_t status5 = triggerReadout(hall_sensor_5,i2c,io);
+	uint8_t status6 = triggerReadout(hall_sensor_6,i2c,io);
+	uint8_t status7 = triggerReadout(hall_sensor_7,i2c,io);
+	uint8_t status8 = triggerReadout(hall_sensor_8,i2c,io);
+	uint8_t status9 = triggerReadout(hall_sensor_9,i2c,io);
 	
 	return checkStatus(status1) | checkStatus(status2) | checkStatus(status3) | checkStatus(status4) | checkStatus(status5) | checkStatus(status6) | checkStatus(status7) | checkStatus(status8) | checkStatus(status9);
 };
 
 void SensorArray_Init(struct MLX90393 *hall_sensor_1, struct MLX90393 *hall_sensor_2, struct MLX90393 *hall_sensor_3,
-struct MLX90393 *hall_sensor_4, struct MLX90393 *hall_sensor_5, struct MLX90393 *hall_sensor_6,
-struct MLX90393 *hall_sensor_7, struct MLX90393 *hall_sensor_8, struct MLX90393 *hall_sensor_9,
-struct io_descriptor *io)
+					  struct MLX90393 *hall_sensor_4, struct MLX90393 *hall_sensor_5, struct MLX90393 *hall_sensor_6,
+					  struct MLX90393 *hall_sensor_7, struct MLX90393 *hall_sensor_8, struct MLX90393 *hall_sensor_9,
+					  struct i2c_m_sync_desc *const i2c, struct io_descriptor *io)
 {
 	//bottom row left
 	initialize(hall_sensor_1);
-	begin(hall_sensor_1,1,0,0,false, io);
-	triggerInitialize(hall_sensor_1, io);
+	begin(hall_sensor_1,1,0,0,false, i2c, io);
+	triggerInitialize(hall_sensor_1, i2c, io);
 	delay_ms(5);
 	
 	//bottom row middle
 	initialize(hall_sensor_2);
-	begin(hall_sensor_2,1,0,1,false, io);
-	triggerInitialize(hall_sensor_2, io);
+	begin(hall_sensor_2,1,0,1,false, i2c, io);
+	triggerInitialize(hall_sensor_2, i2c, io);
 	delay_ms(5);
 	
 	//bottom row right
 	initialize(hall_sensor_3);
-	begin(hall_sensor_3,1,1,0,false, io);
-	triggerInitialize(hall_sensor_3, io);
+	begin(hall_sensor_3,1,1,0,false, i2c, io);
+	triggerInitialize(hall_sensor_3, i2c, io);
 	delay_ms(5);
 	
 	//middle row left
 	initialize(hall_sensor_4);
-	begin(hall_sensor_4,2,0,0,false, io);
-	triggerInitialize(hall_sensor_4, io);
+	begin(hall_sensor_4,2,0,0,false, i2c, io);
+	triggerInitialize(hall_sensor_4, i2c, io);
 	delay_ms(5);
 	
 	//middle row middle
 	initialize(hall_sensor_5);
-	begin(hall_sensor_5,2,0,1,false, io);
-	triggerInitialize(hall_sensor_5, io);
+	begin(hall_sensor_5,2,0,1,false, i2c, io);
+	triggerInitialize(hall_sensor_5, i2c, io);
 	delay_ms(5);
 	
 	//middle row right
 	initialize(hall_sensor_6);
-	begin(hall_sensor_6,2,1,0,false, io);
-	triggerInitialize(hall_sensor_6, io);
+	begin(hall_sensor_6,2,1,0,false, i2c, io);
+	triggerInitialize(hall_sensor_6, i2c, io);
 	delay_ms(5);
 	
 	//top row left
 	initialize(hall_sensor_7);
-	begin(hall_sensor_7,3,0,0,false, io);
-	triggerInitialize(hall_sensor_7, io);
+	begin(hall_sensor_7,3,0,0,false, i2c, io);
+	triggerInitialize(hall_sensor_7, i2c, io);
 	delay_ms(5);
 	
 	//top row middle
 	initialize(hall_sensor_8);
-	begin(hall_sensor_8,3,0,1,false, io);
-	triggerInitialize(hall_sensor_8, io);
+	begin(hall_sensor_8,3,0,1,false, i2c, io);
+	triggerInitialize(hall_sensor_8, i2c, io);
 	delay_ms(5);
 	
 	//top row right
 	initialize(hall_sensor_9);
-	begin(hall_sensor_9,3,1,0,false, io);
-	triggerInitialize(hall_sensor_9, io);
+	begin(hall_sensor_9,3,1,0,false, i2c, io);
+	triggerInitialize(hall_sensor_9, i2c, io);
 	delay_ms(5);
 }
 
