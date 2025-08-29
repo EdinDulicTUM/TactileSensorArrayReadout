@@ -70,6 +70,8 @@ hpl\tc\tc_lite.c
 
 main.c
 
+Melexis\Calibration_Parameters.c
+
 Melexis\MLX90393_microchip.c
 
 Melexis\SensorArray.c

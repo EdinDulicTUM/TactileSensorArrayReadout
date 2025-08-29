@@ -10,28 +10,76 @@ void RS(struct fneuron_t *neuron) {
 	neuron->c = -65;
 	neuron->d = 6;
 	neuron->potential = neuron->recovery = 0;
-	neuron->timestep_neuron = 1; // junan recommendation 0.05, bigger timesteps till 1.5 is fine (see paper) 
+	neuron->timestep_neuron = 1; // Junan's recommendation 0.05, bigger Timesteps till 1.5 are fine (see paper) 
 }
 
 void force_parameters (struct fneuron_t *neuron) {
 	// initiate parameters for normal and shear force
 	// parameters normal force
-	neuron->beta = 0;
-	neuron->k_s	= 1.2; //0.0000003
-	neuron->k_d = 0;//0.003
+	neuron->beta = 0; //needs maybe adjustment
+	neuron->k_s	= 1.2; //0.0000003 , needs adjustment
+	neuron->k_d = 0;//0.003 , needs adjustment
 	neuron-> normal_force_past = 0; 
 	// parameters shear force
-	neuron->theta = 0;
-	neuron->r_s = 4.8;
-	neuron->r_d = 0;
-	neuron-> shear_force_past = 0; 
-	neuron->timestep_force = 10; 
+	neuron->theta = 0; // maybe needs adjustment
+	neuron->r_s = 4.8; // needs adjustment
+	neuron->r_d = 0; // not relevant
+	neuron-> shear_force_past = 0; //not relevant
+	neuron->timestep_force = 10; // Depends on how many arrays are readout at the same time - 1 Array:10, 2 Arrays:20
+	neuron->calculation_mode = 1; // 1: No Contact Modeling, 2. With Contact Modeling
+	neuron->start_of_derivitiveCalc = true;
 }
 
 void calc_current_normal_force(struct fneuron_t *neuron, float force_z){
-	neuron->normal_force = force_z;
-	neuron->cell_current = neuron->beta + (neuron->k_s * neuron->normal_force);
-	neuron->normal_force_past = neuron->normal_force;
+	switch (neuron->calculation_mode)
+	{
+		case 1:;
+			neuron->normal_force = force_z;
+			neuron->cell_current = neuron->beta + (neuron->k_s * neuron->normal_force);
+			neuron->normal_force_past = neuron->normal_force;
+			break;
+		
+		case 2:;
+			 if (neuron->start_of_derivitiveCalc == true)
+			 {
+				 neuron->normal_force = force_z;
+				 neuron->cell_current = neuron->beta + (neuron->k_s * neuron->normal_force);
+				 neuron->normal_force_past = neuron->normal_force;
+				 neuron->start_of_derivitiveCalc == false;
+			 }
+			 else
+			 {
+				  neuron->normal_force = force_z;
+				  float derivative;
+				  derivative = (neuron->normal_force - neuron->normal_force_past) / neuron->timestep_force;
+				  if (derivative < 0)
+				  {
+					  derivative = derivative * -1;
+				  }
+				  neuron->cell_current = neuron->beta + (neuron->k_s * neuron->normal_force) + (neuron->k_d * derivative);
+				  neuron->normal_force_past = neuron->normal_force;
+			 }
+	}
+	
+	/* 
+	//only necessary if derivative for contact behavior is necessary
+    if (start == true)
+    {
+        neuron->normal_force = force_z;
+        neuron->cell_current = neuron->beta + (neuron->k_s * neuron->normal_force);
+        neuron->normal_force_past = neuron->normal_force;
+    }
+    else{
+        neuron->normal_force = force_z;
+        float derivative;
+        derivative = (neuron->normal_force - neuron->normal_force_past) / neuron->timestep_force;
+         if (derivative < 0){
+             derivative = derivative * -1;
+         }
+        neuron->cell_current = neuron->beta + (neuron->k_s * neuron->normal_force) + (neuron->k_d * derivative);
+        neuron->normal_force_past = neuron->normal_force;
+    }
+*/
 }
 
 void calc_current_shear_force(struct fneuron_t *neuron,float force_r){//(fneuron_t *neuron, bool start, float force_x, float force_y
@@ -173,3 +221,46 @@ void update_struct_values_neural(struct neuronRow_Values *neuron_row, struct neu
 	neuron_row->neuron_bottom_normal = neuron_pair_bottom->neuron_normal.potential;
 	neuron_row->neuron_bottom_shear = neuron_pair_bottom->neuron_shear.potential;
 }
+
+//Normal Force Alternative Calculation with derivative 
+/* 
+//only necessary if derivative for contact behavior is necessary
+    if (start == true)
+    {
+        neuron->normal_force = force_z;
+        neuron->cell_current = neuron->beta + (neuron->k_s * neuron->normal_force);
+        neuron->normal_force_past = neuron->normal_force;
+    }
+    else{
+        neuron->normal_force = force_z;
+        float derivative;
+        derivative = (neuron->normal_force - neuron->normal_force_past) / neuron->timestep_force;
+         if (derivative < 0){
+             derivative = derivative * -1;
+         }
+        neuron->cell_current = neuron->beta + (neuron->k_s * neuron->normal_force) + (neuron->k_d * derivative);
+        neuron->normal_force_past = neuron->normal_force;
+    }
+*/
+
+//Shear Force Alternative Calculation with derivative 
+/*no indication in literature that derivative is necessary
+    if (start == true)
+    {
+        float input = (force_x*force_x) + (force_y*force_y);
+        neuron->shear_force = sqrt(input);
+        neuron->cell_current = neuron->theta + (neuron->r_s * neuron->shear_force);
+        neuron->shear_force_past = neuron->shear_force;
+    }
+    else{
+        float input = (force_x*force_x) + (force_y*force_y);
+        neuron->shear_force = sqrt(input);
+        float derivative;
+        derivative = (neuron->shear_force - neuron->shear_force_past) / neuron->timestep_force;
+        if (derivative < 0){
+            derivative = derivative * -1;
+        }
+        neuron->cell_current = neuron->theta + (neuron->r_s * neuron->shear_force) + (neuron->r_d * derivative);
+        neuron->shear_force_past = neuron->shear_force;
+    }
+*/

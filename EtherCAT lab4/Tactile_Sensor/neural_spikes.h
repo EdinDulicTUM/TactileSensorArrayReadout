@@ -13,6 +13,8 @@ typedef struct fneuron_t{
 	float beta, k_s, k_d;
 	float theta, r_s, r_d;
 	float timestep_force; // depending on force sensor example 250 HZ results in 4 ms
+	uint8_t calculation_mode; // 1: No Contact Modeling, 2. With Contact Modeling
+	bool start_of_derivitiveCalc;
 } fneuron_t;
 
 typedef struct neuron_pair{

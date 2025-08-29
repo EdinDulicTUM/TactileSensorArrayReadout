@@ -145,7 +145,7 @@ Melexis/SensorArray.d Melexis/SensorArray.o: ../Melexis/SensorArray.c \
  ../hal/include/hal_spi_m_dma.h ../hal/include/hpl_spi_m_dma.h \
  ../hal/include/hpl_spi.h ../hal/utils/include/utils.h \
  ../hal/include/hpl_spi_dma.h ../hal/include/hpl_dma.h \
- ../hpl/tc/tc_lite.h \
+ ../hpl/tc/tc_lite.h ../Melexis/Calibration_Parameters.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\arm\arm-gnu-toolchain\arm-none-eabi\include\math.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\arm\arm-gnu-toolchain\arm-none-eabi\include\sys\reent.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\arm\arm-gnu-toolchain\arm-none-eabi\include\_ansi.h \
@@ -529,6 +529,8 @@ C:\Program\ Files\ (x86)\Atmel\Studio\7.0\Packs\atmel\SAME54_DFP\1.1.134\include
 ../hal/include/hpl_dma.h:
 
 ../hpl/tc/tc_lite.h:
+
+../Melexis/Calibration_Parameters.h:
 
 c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\arm\arm-gnu-toolchain\arm-none-eabi\include\math.h:
 

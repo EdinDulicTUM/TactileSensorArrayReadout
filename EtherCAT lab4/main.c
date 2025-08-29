@@ -7,6 +7,7 @@
 #include <math.h>
 #include <Melexis/SensorArray.h>
 #include <Tactile_Sensor/neural_spikes.h>
+#include <Melexis/Calibration_Parameters.h>
 
 //struct for I2C IO
 struct io_descriptor *bmx_io;
@@ -31,6 +32,8 @@ struct  sensor_array
 	struct sensorRow_Values sensorRow_Values_Middle;
 	struct sensorRow_Values sensorRow_Values_Right;
 	
+	struct function_Parameters parameters_array;
+	
 	//Create Neuron Pairs based on the Izhekevic Model for every hall sensor
 	struct neuron_pair neuron_pair_1_top; 
 	struct neuron_pair neuron_pair_1_middle; 
@@ -49,8 +52,12 @@ struct  sensor_array
 	
 	uint8_t array_number; 
 };
+
 struct sensor_array sensor_array_1;
 struct sensor_array sensor_array_2;
+
+
+
 
 //readout variables
 bool new_data;
@@ -121,7 +128,7 @@ void SensorRowUpdate(struct sensor_array *sensor_array_use, uint8_t row_select, 
 		case 1: ;
 			
 			update_struct_values(&(sensor_array_use->sensorRow_Values_Left), &(sensor_array_use->sensor7), &(sensor_array_use->sensor4), &(sensor_array_use->sensor1));
-			mag_to_force(row_select, &(sensor_array_use->sensorRow_Values_Left));
+			mag_to_force(row_select, &(sensor_array_use->sensorRow_Values_Left), &(sensor_array_use->parameters_array));
 			neuron_calc_row(&(sensor_array_use->sensorRow_Values_Left), &(sensor_array_use->neuron_pair_1_top), &(sensor_array_use->neuron_pair_1_middle), &(sensor_array_use->neuron_pair_1_bottom));
 			update_struct_values_neural(&(sensor_array_use->neuronRow_Values_Left), &(sensor_array_use->neuron_pair_1_top), &(sensor_array_use->neuron_pair_1_middle), &(sensor_array_use->neuron_pair_1_bottom));
 			
@@ -168,7 +175,7 @@ void SensorRowUpdate(struct sensor_array *sensor_array_use, uint8_t row_select, 
 		
 		case 2: ;
 			update_struct_values(&(sensor_array_use->sensorRow_Values_Middle), &(sensor_array_use->sensor8), &(sensor_array_use->sensor5), &(sensor_array_use->sensor2));
-			mag_to_force(row_select, &(sensor_array_use->sensorRow_Values_Middle));
+			mag_to_force(row_select, &(sensor_array_use->sensorRow_Values_Middle),&(sensor_array_use->parameters_array));
 			neuron_calc_row(&(sensor_array_use->sensorRow_Values_Middle), &(sensor_array_use->neuron_pair_2_top), &(sensor_array_use->neuron_pair_2_middle), &(sensor_array_use->neuron_pair_2_bottom));
 			update_struct_values_neural(&(sensor_array_use->neuronRow_Values_Middle), &(sensor_array_use->neuron_pair_2_top), &(sensor_array_use->neuron_pair_2_middle), &(sensor_array_use->neuron_pair_2_bottom));
 			
@@ -214,7 +221,7 @@ void SensorRowUpdate(struct sensor_array *sensor_array_use, uint8_t row_select, 
 			
 		case 3: ;
 			update_struct_values(&(sensor_array_use->sensorRow_Values_Right), &(sensor_array_use->sensor9), &(sensor_array_use->sensor6), &(sensor_array_use->sensor3));
-			mag_to_force(row_select, &(sensor_array_use->sensorRow_Values_Right));
+			mag_to_force(row_select, &(sensor_array_use->sensorRow_Values_Right), &(sensor_array_use->parameters_array));
 			neuron_calc_row(&(sensor_array_use->sensorRow_Values_Right), &(sensor_array_use->neuron_pair_3_top), &(sensor_array_use->neuron_pair_3_middle), &(sensor_array_use->neuron_pair_3_bottom));
 			update_struct_values_neural(&(sensor_array_use->neuronRow_Values_Right), &(sensor_array_use->neuron_pair_3_top), &(sensor_array_use->neuron_pair_3_middle), &(sensor_array_use->neuron_pair_3_bottom));
 			
@@ -300,6 +307,7 @@ int main(void)
 	SensorArray_Init(&(sensor_array_1.sensor1),&(sensor_array_1.sensor2),&(sensor_array_1.sensor3),
 					 &(sensor_array_1.sensor4),&(sensor_array_1.sensor5),&(sensor_array_1.sensor6),
 					 &(sensor_array_1.sensor7),&(sensor_array_1.sensor8),&(sensor_array_1.sensor9), &I2C_0, bmx_io);
+	initialize_calibration_parameters(&(sensor_array_1.parameters_array), sensor_array_1.array_number);
 	neuron_init_array(&(sensor_array_1.neuron_pair_1_top), &(sensor_array_1.neuron_pair_1_middle), &(sensor_array_1.neuron_pair_1_bottom),
 					  &(sensor_array_1.neuron_pair_2_top), &(sensor_array_1.neuron_pair_2_middle), &(sensor_array_1.neuron_pair_2_bottom), 
 					  &(sensor_array_1.neuron_pair_3_top), &(sensor_array_1.neuron_pair_3_middle), &(sensor_array_1.neuron_pair_3_bottom));
@@ -311,6 +319,7 @@ int main(void)
 		SensorArray_Init(&(sensor_array_2.sensor1),&(sensor_array_2.sensor2),&(sensor_array_2.sensor3),
 						 &(sensor_array_2.sensor4),&(sensor_array_2.sensor5),&(sensor_array_2.sensor6),
 						 &(sensor_array_2.sensor7),&(sensor_array_2.sensor8),&(sensor_array_2.sensor9), &I2C_1, bmx_io_2);
+		initialize_calibration_parameters(&(sensor_array_2.parameters_array), sensor_array_2.array_number);
 		neuron_init_array(&(sensor_array_2.neuron_pair_1_top), &(sensor_array_2.neuron_pair_1_middle), &(sensor_array_2.neuron_pair_1_bottom),
 						  &(sensor_array_2.neuron_pair_2_top), &(sensor_array_2.neuron_pair_2_middle), &(sensor_array_2.neuron_pair_2_bottom),
 						  &(sensor_array_2.neuron_pair_3_top), &(sensor_array_2.neuron_pair_3_middle), &(sensor_array_2.neuron_pair_3_bottom));

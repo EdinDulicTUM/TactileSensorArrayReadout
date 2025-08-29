@@ -9,13 +9,14 @@
 #ifndef SENSORARRAY_H_
 #define SENSORARRAY_H_
 #include <Melexis/MLX90393_microchip.h>
+#include <Melexis/Calibration_Parameters.h>
 
 typedef struct sensorRow_Values{
 	
 	float b_x_top, b_x_middle, b_x_bottom;
 	float b_y_top, b_y_middle, b_y_bottom;
 	float b_z_top, b_z_middle, b_z_bottom;
-	float b_r_top, b_r_middle, b_r_bottom;
+	//float b_r_top, b_r_middle, b_r_bottom; not necessairy due to calculation using Bx and By instead
 	float force_x_top, force_x_middle, force_x_bottom;
 	float force_y_top, force_y_middle, force_y_bottom;
 	float force_z_top, force_z_middle, force_z_bottom;
@@ -37,6 +38,9 @@ void SensorArray_Init(struct MLX90393 *hall_sensor_1, struct MLX90393 *hall_sens
 							struct MLX90393 *hall_sensor_7, struct MLX90393 *hall_sensor_8, struct MLX90393 *hall_sensor_9,
 							struct i2c_m_sync_desc *const i2c, struct io_descriptor *io);
 void update_struct_values(struct sensorRow_Values *sensor_row, struct MLX90393 *hall_sensor_top, struct MLX90393 *hall_sensor_middle, struct MLX90393 *hall_sensor_bottom);
-void mag_to_force(uint8_t row_select, struct sensorRow_Values *sensor_row);
+float calibration_function(float c1, float c2, float c3, float c4, float c5, float c6, float c7, float c8, float c9, float c10,
+						   float c11, float c12, float c13, float c14, float c15, float c16, float c17, float c18, float c19, float c20,
+						   float Bx, float By, float Bz);
+void mag_to_force(uint8_t row_select, struct sensorRow_Values *sensor_row, struct function_Parameters *parameters_array);
 
 #endif /* SENSORARRAY_H_ */
