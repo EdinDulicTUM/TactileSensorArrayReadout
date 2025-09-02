@@ -66,7 +66,8 @@ bool data_readout;
 bool data_sent;
 uint16_t wait_time;
 uint8_t selected_row; 
-uint8_t selected_output_mode;
+uint8_t selected_output_mode_neural;
+uint8_t selected_output_mode_magnet;
 uint8_t selected_array; // needs to be implemented
 uint8_t number_of_arrays;
 
@@ -122,7 +123,7 @@ volatile BLDC_ECAT_OUT*  BLDC_OUT =&ram_buffer[ram_wr_start];
 volatile BLDC_ECAT_IN*  BLDC_IN =&ram_buffer[ram_rd_start];
 
 
-void SensorRowUpdate(struct sensor_array *sensor_array_use, uint8_t row_select, uint8_t output_mode_select) // rewrite to accept struct of any sensor array + update any row in array!!!!!
+void SensorRowUpdate(struct sensor_array *sensor_array_use, uint8_t row_select, uint8_t output_mode_select_magnet, uint8_t output_mode_select_neural) // rewrite to accept struct of any sensor array + update any row in array!!!!!
 {
 	switch(row_select){
 		case 1: ;
@@ -132,21 +133,40 @@ void SensorRowUpdate(struct sensor_array *sensor_array_use, uint8_t row_select, 
 			neuron_calc_row(&(sensor_array_use->sensorRow_Values_Left), &(sensor_array_use->neuron_pair_1_top), &(sensor_array_use->neuron_pair_1_middle), &(sensor_array_use->neuron_pair_1_bottom));
 			update_struct_values_neural(&(sensor_array_use->neuronRow_Values_Left), &(sensor_array_use->neuron_pair_1_top), &(sensor_array_use->neuron_pair_1_middle), &(sensor_array_use->neuron_pair_1_bottom));
 			
-			BLDC_OUT->hall_top_x = sensor_array_use->sensorRow_Values_Left.b_x_top; //data7,8,9
-			BLDC_OUT->hall_top_y = sensor_array_use->sensorRow_Values_Left.b_y_top;
-			BLDC_OUT->hall_top_z = sensor_array_use->sensorRow_Values_Left.b_z_top;
+			switch(output_mode_select_magnet){
+				case 1: ;				
+					BLDC_OUT->hall_top_x = sensor_array_use->sensorRow_Values_Left.b_x_top; //data7,8,9
+					BLDC_OUT->hall_top_y = sensor_array_use->sensorRow_Values_Left.b_y_top;
+					BLDC_OUT->hall_top_z = sensor_array_use->sensorRow_Values_Left.b_z_top;
 				
-			BLDC_OUT->hall_middle_x = sensor_array_use->sensorRow_Values_Left.b_x_middle; //data4,5,6
-			BLDC_OUT->hall_middle_y = sensor_array_use->sensorRow_Values_Left.b_y_middle;
-			BLDC_OUT->hall_middle_z = sensor_array_use->sensorRow_Values_Left.b_z_middle;
+					BLDC_OUT->hall_middle_x = sensor_array_use->sensorRow_Values_Left.b_x_middle; //data4,5,6
+					BLDC_OUT->hall_middle_y = sensor_array_use->sensorRow_Values_Left.b_y_middle;
+					BLDC_OUT->hall_middle_z = sensor_array_use->sensorRow_Values_Left.b_z_middle;
 
 				
-			BLDC_OUT->hall_bottom_x = sensor_array_use->sensorRow_Values_Left.b_x_bottom; //data1,2,3
-			BLDC_OUT->hall_bottom_y = sensor_array_use->sensorRow_Values_Left.b_y_bottom;
-			BLDC_OUT->hall_bottom_z = sensor_array_use->sensorRow_Values_Left.b_z_bottom;
-	
+					BLDC_OUT->hall_bottom_x = sensor_array_use->sensorRow_Values_Left.b_x_bottom; //data1,2,3
+					BLDC_OUT->hall_bottom_y = sensor_array_use->sensorRow_Values_Left.b_y_bottom;
+					BLDC_OUT->hall_bottom_z = sensor_array_use->sensorRow_Values_Left.b_z_bottom;
+					break;
+					
+				case 2: ;
+					BLDC_OUT->hall_top_x = sensor_array_use->sensorRow_Values_Left.force_x_top; //data7,8,9
+					BLDC_OUT->hall_top_y = sensor_array_use->sensorRow_Values_Left.force_y_top;
+					BLDC_OUT->hall_top_z = sensor_array_use->sensorRow_Values_Left.force_z_top;
+					
+					BLDC_OUT->hall_middle_x = sensor_array_use->sensorRow_Values_Left.force_x_middle; //data4,5,6
+					BLDC_OUT->hall_middle_y = sensor_array_use->sensorRow_Values_Left.force_y_middle;
+					BLDC_OUT->hall_middle_z = sensor_array_use->sensorRow_Values_Left.force_z_middle;
+
+					
+					BLDC_OUT->hall_bottom_x = sensor_array_use->sensorRow_Values_Left.force_x_bottom; //data1,2,3
+					BLDC_OUT->hall_bottom_y = sensor_array_use->sensorRow_Values_Left.force_y_bottom;
+					BLDC_OUT->hall_bottom_z = sensor_array_use->sensorRow_Values_Left.force_z_bottom;
+					break;
 			
-			switch(output_mode_select){
+			}
+			
+			switch(output_mode_select_neural){
 				case 1: ;
 					BLDC_OUT->neuron_top_normal = sensor_array_use->sensorRow_Values_Left.force_z_top;
 					BLDC_OUT->neuron_top_shear = sensor_array_use->sensorRow_Values_Left.force_r_top;
@@ -179,20 +199,39 @@ void SensorRowUpdate(struct sensor_array *sensor_array_use, uint8_t row_select, 
 			neuron_calc_row(&(sensor_array_use->sensorRow_Values_Middle), &(sensor_array_use->neuron_pair_2_top), &(sensor_array_use->neuron_pair_2_middle), &(sensor_array_use->neuron_pair_2_bottom));
 			update_struct_values_neural(&(sensor_array_use->neuronRow_Values_Middle), &(sensor_array_use->neuron_pair_2_top), &(sensor_array_use->neuron_pair_2_middle), &(sensor_array_use->neuron_pair_2_bottom));
 			
-			BLDC_OUT->hall_top_x = sensor_array_use->sensorRow_Values_Middle.b_x_top; //data7,8,9
-			BLDC_OUT->hall_top_y = sensor_array_use->sensorRow_Values_Middle.b_y_top;
-			BLDC_OUT->hall_top_z = sensor_array_use->sensorRow_Values_Middle.b_z_top;
+			switch(output_mode_select_magnet){
+				case 1: ;			
+					BLDC_OUT->hall_top_x = sensor_array_use->sensorRow_Values_Middle.b_x_top; //data7,8,9
+					BLDC_OUT->hall_top_y = sensor_array_use->sensorRow_Values_Middle.b_y_top;
+					BLDC_OUT->hall_top_z = sensor_array_use->sensorRow_Values_Middle.b_z_top;
 			
-			BLDC_OUT->hall_middle_x = sensor_array_use->sensorRow_Values_Middle.b_x_middle; //data4,5,6
-			BLDC_OUT->hall_middle_y = sensor_array_use->sensorRow_Values_Middle.b_y_middle;
-			BLDC_OUT->hall_middle_z = sensor_array_use->sensorRow_Values_Middle.b_z_middle;
+					BLDC_OUT->hall_middle_x = sensor_array_use->sensorRow_Values_Middle.b_x_middle; //data4,5,6
+					BLDC_OUT->hall_middle_y = sensor_array_use->sensorRow_Values_Middle.b_y_middle;
+					BLDC_OUT->hall_middle_z = sensor_array_use->sensorRow_Values_Middle.b_z_middle;
 
 			
-			BLDC_OUT->hall_bottom_x = sensor_array_use->sensorRow_Values_Middle.b_x_bottom; //data1,2,3
-			BLDC_OUT->hall_bottom_y = sensor_array_use->sensorRow_Values_Middle.b_y_bottom;
-			BLDC_OUT->hall_bottom_z = sensor_array_use->sensorRow_Values_Middle.b_z_bottom;
+					BLDC_OUT->hall_bottom_x = sensor_array_use->sensorRow_Values_Middle.b_x_bottom; //data1,2,3
+					BLDC_OUT->hall_bottom_y = sensor_array_use->sensorRow_Values_Middle.b_y_bottom;
+					BLDC_OUT->hall_bottom_z = sensor_array_use->sensorRow_Values_Middle.b_z_bottom;
+					break;
+					
+				case 2: ;
+					BLDC_OUT->hall_top_x = sensor_array_use->sensorRow_Values_Middle.force_x_top; //data7,8,9
+					BLDC_OUT->hall_top_y = sensor_array_use->sensorRow_Values_Middle.force_y_top;
+					BLDC_OUT->hall_top_z = sensor_array_use->sensorRow_Values_Middle.force_z_top;
+					
+					BLDC_OUT->hall_middle_x = sensor_array_use->sensorRow_Values_Middle.force_x_middle; //data4,5,6
+					BLDC_OUT->hall_middle_y = sensor_array_use->sensorRow_Values_Middle.force_y_middle;
+					BLDC_OUT->hall_middle_z = sensor_array_use->sensorRow_Values_Middle.force_z_middle;
+
+					
+					BLDC_OUT->hall_bottom_x = sensor_array_use->sensorRow_Values_Middle.force_x_bottom; //data1,2,3
+					BLDC_OUT->hall_bottom_y = sensor_array_use->sensorRow_Values_Middle.force_y_bottom;
+					BLDC_OUT->hall_bottom_z = sensor_array_use->sensorRow_Values_Middle.force_z_bottom;		
+					break;		
+			}
 			
-			switch(output_mode_select){
+			switch(output_mode_select_neural){
 				case 1: ;
 				BLDC_OUT->neuron_top_normal = sensor_array_use->sensorRow_Values_Middle.force_z_top;
 				BLDC_OUT->neuron_top_shear = sensor_array_use->sensorRow_Values_Middle.force_r_top;
@@ -225,20 +264,39 @@ void SensorRowUpdate(struct sensor_array *sensor_array_use, uint8_t row_select, 
 			neuron_calc_row(&(sensor_array_use->sensorRow_Values_Right), &(sensor_array_use->neuron_pair_3_top), &(sensor_array_use->neuron_pair_3_middle), &(sensor_array_use->neuron_pair_3_bottom));
 			update_struct_values_neural(&(sensor_array_use->neuronRow_Values_Right), &(sensor_array_use->neuron_pair_3_top), &(sensor_array_use->neuron_pair_3_middle), &(sensor_array_use->neuron_pair_3_bottom));
 			
-			BLDC_OUT->hall_top_x = sensor_array_use->sensorRow_Values_Right.b_x_top; //data7,8,9
-			BLDC_OUT->hall_top_y = sensor_array_use->sensorRow_Values_Right.b_y_top;
-			BLDC_OUT->hall_top_z = sensor_array_use->sensorRow_Values_Right.b_z_top;
+			switch(output_mode_select_magnet){
+				case 1: ;			
+					BLDC_OUT->hall_top_x = sensor_array_use->sensorRow_Values_Right.b_x_top; //data7,8,9
+					BLDC_OUT->hall_top_y = sensor_array_use->sensorRow_Values_Right.b_y_top;
+					BLDC_OUT->hall_top_z = sensor_array_use->sensorRow_Values_Right.b_z_top;
 			
-			BLDC_OUT->hall_middle_x = sensor_array_use->sensorRow_Values_Right.b_x_middle; //data4,5,6
-			BLDC_OUT->hall_middle_y = sensor_array_use->sensorRow_Values_Right.b_y_middle;
-			BLDC_OUT->hall_middle_z = sensor_array_use->sensorRow_Values_Right.b_z_middle;
+					BLDC_OUT->hall_middle_x = sensor_array_use->sensorRow_Values_Right.b_x_middle; //data4,5,6
+					BLDC_OUT->hall_middle_y = sensor_array_use->sensorRow_Values_Right.b_y_middle;
+					BLDC_OUT->hall_middle_z = sensor_array_use->sensorRow_Values_Right.b_z_middle;
 
 			
-			BLDC_OUT->hall_bottom_x = sensor_array_use->sensorRow_Values_Right.b_x_bottom; //data1,2,3
-			BLDC_OUT->hall_bottom_y = sensor_array_use->sensorRow_Values_Right.b_y_bottom;
-			BLDC_OUT->hall_bottom_z = sensor_array_use->sensorRow_Values_Right.b_z_bottom;
+					BLDC_OUT->hall_bottom_x = sensor_array_use->sensorRow_Values_Right.b_x_bottom; //data1,2,3
+					BLDC_OUT->hall_bottom_y = sensor_array_use->sensorRow_Values_Right.b_y_bottom;
+					BLDC_OUT->hall_bottom_z = sensor_array_use->sensorRow_Values_Right.b_z_bottom;
+					break;
+				
+				case 2: ;
+					BLDC_OUT->hall_top_x = sensor_array_use->sensorRow_Values_Right.force_x_top; //data7,8,9
+					BLDC_OUT->hall_top_y = sensor_array_use->sensorRow_Values_Right.force_y_top;
+					BLDC_OUT->hall_top_z = sensor_array_use->sensorRow_Values_Right.force_z_top;
+					
+					BLDC_OUT->hall_middle_x = sensor_array_use->sensorRow_Values_Right.force_x_middle; //data4,5,6
+					BLDC_OUT->hall_middle_y = sensor_array_use->sensorRow_Values_Right.force_y_middle;
+					BLDC_OUT->hall_middle_z = sensor_array_use->sensorRow_Values_Right.force_z_middle;
+
+					
+					BLDC_OUT->hall_bottom_x = sensor_array_use->sensorRow_Values_Right.force_x_bottom; //data1,2,3
+					BLDC_OUT->hall_bottom_y = sensor_array_use->sensorRow_Values_Right.force_y_bottom;
+					BLDC_OUT->hall_bottom_z = sensor_array_use->sensorRow_Values_Right.force_z_bottom;
+					break;
+			}
 			
-			switch(output_mode_select){
+			switch(output_mode_select_neural){
 				case 1: ;
 				BLDC_OUT->neuron_top_normal = sensor_array_use->sensorRow_Values_Right.force_z_top;
 				BLDC_OUT->neuron_top_shear = sensor_array_use->sensorRow_Values_Right.force_r_top;
@@ -297,7 +355,8 @@ int main(void)
 	selected_array = 1; 
 	
 	// User Input
-	selected_output_mode = 1; //1 = Force, 2 = Neural Spikes
+	selected_output_mode_neural = 1; //1 = Force, 2 = Neural Spikes
+	selected_output_mode_magnet = 1; //1 = Magnet, 2 = Force
 	number_of_arrays = 2; // how many arrays you want to read out at the same time - implementation necessairy!
 	
 	
@@ -364,12 +423,12 @@ int main(void)
 		{
 			if (selected_array == 1)
 			{
-				SensorRowUpdate(&sensor_array_1, selected_row, selected_output_mode);		
+				SensorRowUpdate(&sensor_array_1, selected_row, selected_output_mode_magnet, selected_output_mode_neural);		
 				//delay_ms(2);
 			}
 			if (selected_array == 2)
 			{
-				SensorRowUpdate(&sensor_array_2, selected_row, selected_output_mode);	
+				SensorRowUpdate(&sensor_array_2, selected_row, selected_output_mode_magnet, selected_output_mode_neural);	
 				//delay_ms(2);
 			}
 			selected_row++;	

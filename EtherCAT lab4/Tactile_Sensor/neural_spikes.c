@@ -16,16 +16,16 @@ void RS(struct fneuron_t *neuron) {
 void force_parameters (struct fneuron_t *neuron) {
 	// initiate parameters for normal and shear force
 	// parameters normal force
-	neuron->beta = 0; //needs maybe adjustment
-	neuron->k_s	= 1.2; //0.0000003 , needs adjustment
-	neuron->k_d = 0;//0.003 , needs adjustment
-	neuron-> normal_force_past = 0; 
+	neuron->beta = 0.3966; //
+	neuron->k_s	= 2.1747; //
+	neuron->k_d = 0;//0.003 , needs adjustment if contact modeling is enabled
+	neuron-> normal_force_past = 0; // do not touch
 	// parameters shear force
-	neuron->theta = 0; // maybe needs adjustment
-	neuron->r_s = 4.8; // needs adjustment
+	neuron->theta = 0.3966; // 
+	neuron->r_s = 7.2491; // 
 	neuron->r_d = 0; // not relevant
-	neuron-> shear_force_past = 0; //not relevant
-	neuron->timestep_force = 10; // Depends on how many arrays are readout at the same time - 1 Array:10, 2 Arrays:20
+	neuron-> shear_force_past = 0; //Not relevant
+	neuron->timestep_force = 20; // Depends on how many arrays are readout at the same time - 1 Array:10, 2 Arrays:20
 	neuron->calculation_mode = 1; // 1: No Contact Modeling, 2. With Contact Modeling
 	neuron->start_of_derivitiveCalc = true;
 }
